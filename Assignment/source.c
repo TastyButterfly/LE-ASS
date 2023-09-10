@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
@@ -958,10 +958,12 @@ int calcCGPA(sem,sub,ID) {
 			studSem3GPA[ID][13] = wgpa / cred;
 	}
 }
-void targetCalc() { ; }
+void targetCalc() {
+	printf("\nThis area is off limits!\n");
+}
 void main(){
-	char loop = '1',studLoop='1';
-	while (loop == '1') {
+	int loop =1,studLoop=1;
+	while (loop ==1) {
 		attempt = 1;
 		menu();
 		if (menuSelect == 1) {
@@ -978,17 +980,17 @@ void main(){
 				if(pass1 == 1 && pass2 == 1) { adminMenu();}//if admin password and id is correct
 			}
 			if (loginSelect == 2) {//student details selected
-				while (studLoop == '1') {
+				while (studLoop ==1) {
 					studentMenu();
 					printf("Do you want to continue to view student details? Enter 1 to continue.");
-					scanf("%c",&studLoop);
+					if (scanf("%d", &studLoop) == 0)studLoop = 0;//runs if user inputs non-int value, regards it as exit loop
 					rewind(stdin);
 				}
 			}
 		}
-		else if (menuSelect==2){}
+		else if (menuSelect == 2) { targetCalc(); }
 		printf("\nWould you like to continue? Type 1 to continue; any other value to exit.\n");
-		scanf("%c", &loop);
+		if (scanf("%d", &loop) == 0)loop = 0;//runs if user inputs non-int value, regards it as exit loop;
 		rewind(stdin);
 		system("cls");//clears console
 	}
