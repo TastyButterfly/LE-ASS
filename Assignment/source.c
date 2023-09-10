@@ -4,9 +4,9 @@
 #include <string.h>
 #pragma warning (disable:4996)
 int menuSelect,loginSelect,pass1,pass2,pass3,accID,linecheck,SIDline,attempt;
-char PIN[8], studentDetails[][3][60] = { {"KPKL1234","idk",},{""} }/*ID, name*/, studSem1Sub[][8][10] = { {"AAA1003","AAA1014","AAA1013","AAA1024","AAA1024","AAA1052","July","October"}}, studSem2Sub[][13][8] = {{"AAA1103","AAA1114","AAA1113","","","","November","January"}}, studSem3Sub[][13][8] = {{"AAA1203","AAA1214","AAA1213","AAA1224","AAA1224","AAA1252","February","June"}};//course codes, sem start, sem end
+char PIN[8], studentDetails[][8][60] = { {"KPKL1234","idk","Y","Y","Y","Y","Y","Y"},{""}}/*ID, name,subject entry (3 semesters), session entry (3 semesters)*/, studSem1Sub[][10][15] = {{"AAA1003","AAA1014","AAA1013","AAA1024","AAA1024","AAA1052","July","2023","October","2023"}}, studSem2Sub[][10][15] = {{"AAA1103","AAA1114","AAA1113","","","","November","2023","January","2024"}}, studSem3Sub[][10][15] = {{"AAA1203","AAA1214","AAA1213","AAA1224","AAA1224","AAA1252","February","2024","June","2024"}};//course codes(0-5), sem start(6/7), sem end(8/9)
 char* PINcheck[] = {"234567","123456","234565"};
-float studSem1GPA[][13]={{4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20}}, studSem2GPA[][13] = { {4.0,4.0,4.0,0,0,0,3,4,3,0,0,0,10} }, studSem3GPA[][13] = { {4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20} };//gpa for respective course and total sem credit hours
+float studSem1GPA[][15]={{4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6}}, studSem2GPA[][15] = { {4.0,4.0,4.0,0,0,0,3,4,3,0,0,0,10,4.0,3} }, studSem3GPA[][15] = { {4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6} };//gpa for respective course(0-5),sem credit hours(6-11),total credit hours(12),cgpa(13),number of subjects(14)
 void menu() {
 	for (int i = 0; i < 50; i++) {
 		putchar('=');
@@ -106,7 +106,7 @@ void adminMenu() {
 		putchar('=');
 	}
 	//above is to print admin menu, clears console
-	int select, subSelect, i, loop = 1, loop2 = 1, menu2select, subjectLoop, ID,check, semSelect, gradeLoop = 1,sessionSelect;
+	int select=0, i, loop = 1, loop2 = 1,loop3=1,loop4=1, menu2select=0, subjectLoop=0, ID,check, semSelect=0, gradeLoop = 1,sessionSelect=0,month=0,year=0;
 	char IDcheck[10], grade[2],stdID[10],IDConfirm[10],stdName[60],nameConfirm[60];
 	while (loop == 1) {
 		printf("\n1.Add new student.\n2.Enter student course details.\n3.View students' CGPA and GPA score.\n0.Exit\n");//prints menu
@@ -152,6 +152,15 @@ void adminMenu() {
 				rewind(stdin);
 			}//check confirmation id match
 			strcpy(studentDetails[ID + 1][0], "");
+			strcpy(studentDetails[ID][2],"N");
+			strcpy(studentDetails[ID][3], "N");
+			strcpy(studentDetails[ID][4], "N");
+			strcpy(studentDetails[ID][5], "N");
+			strcpy(studentDetails[ID][6], "N");
+			strcpy(studentDetails[ID][7], "N");
+			studSem1GPA[ID][13] =0;
+			studSem2GPA[ID][13] = 0;
+			studSem3GPA[ID][13] = 0;
 			printf("Enter new student name:");
 			scanf("%59[^\n]", studentDetails[ID][1]);
 			rewind(stdin);
@@ -191,221 +200,655 @@ void adminMenu() {
 					if (strcmp(studentDetails[ID][0], IDcheck) == 0) {
 						loop2 = 0;
 						break;}
-				}
+				}//verify ID
 			}//enter ID and check if id is available
 			if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!"); }//runs if id is unavailable
 			else {//if id is found in system:
-				system("cls");
-				for (int i = 0; i < 50; i++) {
-					putchar('=');
-				}
-				printf("\n%33s\n", "DETAILS EDITOR");
-				for (int i = 0; i < 50; i++) {
-					putchar('=');
-				}//print menu
-				menuSelect = 0;//reset parameters
-				printf("\nYou are now editing %s, %s's details\n1.Enter course code and grade obtained.\n2.Enter current semester session.\n", studentDetails[ID][0], studentDetails[ID][1]);
-				scanf("%d", &menu2select);
-				while (menu2select != 1 && menu2select != 2) {
-					rewind(stdin);
-					printf("Enter a value between 1 to 2!\n");
+				while (loop3 == 1) {
+					system("cls");
+					for (int i = 0; i < 50; i++) {
+						putchar('=');
+					}
+					printf("\n%33s\n", "DETAILS EDITOR");
+					for (int i = 0; i < 50; i++) {
+						putchar('=');
+					}//print menu
+					menuSelect = 0;//reset parameters
+					printf("\nYou are now editing %s, %s's details\n1.Enter course code and grade obtained.\n2.Enter current semester session.\n", studentDetails[ID][0], studentDetails[ID][1]);
 					scanf("%d", &menu2select);
-				}//check user input validity
-				switch (menu2select) {
-				case 1://input course details
-					semSelect = 0;
-					printf("Enter edited semester (1,2 or 3):");
-					scanf("%d", &semSelect);
-					while (semSelect < 1 || semSelect>3) {
+					while (menu2select != 1 && menu2select != 2) {
 						rewind(stdin);
-						printf("Enter 1,2 or 3 only!\n");
-						scanf("%d", &semSelect);
+						printf("Enter a value between 1 to 2!\n");
+						scanf("%d", &menu2select);
 					}//check user input validity
-					subjectLoop = 0;
-					switch (semSelect) {
-					case 1:
-						printf("Enter number of courses:");
-						scanf("%d", &subjectLoop);
-						while (subjectLoop > 6 || subjectLoop < 0) {
+					switch (menu2select) {
+					case 1://input course details
+						semSelect = 0;
+						printf("Enter edited semester (1,2 or 3):");
+						scanf("%d", &semSelect);
+						while (semSelect < 1 || semSelect>3) {
 							rewind(stdin);
-							printf("Enter a number between 1 to 6!");
-							scanf("%d", &subjectLoop);
+							printf("Enter 1,2 or 3 only!\n");
+							scanf("%d", &semSelect);
 						}//check user input validity
-						for (int n = 0;n < subjectLoop;n++) {
-							printf("Enter course code for subject %d", n + 1);
-							scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
-							rewind(stdin);
-							studSem1GPA[ID][n + 6] = (float)studSem1Sub[ID][n][6] - 48;//course weightage
-							printf("Enter grade obtained:");
-							scanf("%2s", grade);
-							while (gradeLoop == 1) {
-								if (strcmp(grade, "A") == 0) {
-									studSem1GPA[ID][n] = 4.0;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "A-") == 0) {
-									studSem1GPA[ID][n] = 3.75;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "B+") == 0) {
-									studSem1GPA[ID][n] = 3.50;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "B") == 0) {
-									studSem1GPA[ID][n] = 3.00;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "B-") == 0) {
-									studSem1GPA[ID][n] = 2.75;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "C+") == 0) {
-									studSem1GPA[ID][n] = 2.50;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "C") == 0) {
-									studSem1GPA[ID][n] = 2.00;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "F") == 0) {
-									studSem1GPA[ID][n] = 0.00;
-									gradeLoop = 0;
-								}
-								else {
+						subjectLoop = 0;
+						switch (semSelect) {
+						case 1:
+							printf("Enter number of courses:");
+							scanf("%d", &subjectLoop);
+							while (subjectLoop > 6 || subjectLoop < 1) {
+								rewind(stdin);
+								printf("Enter a number between 1 to 6!");
+								scanf("%d", &subjectLoop);
+							}//check user input validity
+							studSem1GPA[ID][14] = subjectLoop;
+							for (int n = 0;n < subjectLoop;n++) {
+								printf("Enter course code for subject %d:", n + 1);
+								scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
+								rewind(stdin);
+								while ((float)studSem1Sub[ID][n][6]-48< 0 ||(float)studSem1Sub[ID][n][6]-48>9) {
+									printf("Invalid course code!");
+									scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
 									rewind(stdin);
-									printf("Enter a valid grade!");
-									scanf("%2s", grade);
+								}
+								studSem1GPA[ID][n + 6] = (float)studSem1Sub[ID][n][6] - 48;//course weightage
+								studSem1GPA[ID][12] += studSem1GPA[ID][n + 6];
+								printf("Enter grade obtained:");
+								scanf("%2s", grade);
+								while (gradeLoop == 1) {
+									if (strcmp(grade, "A") == 0) {
+										studSem1GPA[ID][n] = 4.0;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "A-") == 0) {
+										studSem1GPA[ID][n] = 3.75;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "B+") == 0) {
+										studSem1GPA[ID][n] = 3.50;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "B") == 0) {
+										studSem1GPA[ID][n] = 3.00;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "B-") == 0) {
+										studSem1GPA[ID][n] = 2.75;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "C+") == 0) {
+										studSem1GPA[ID][n] = 2.50;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "C") == 0) {
+										studSem1GPA[ID][n] = 2.00;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "F") == 0) {
+										studSem1GPA[ID][n] = 0.00;
+										gradeLoop = 0;
+									}
+									else {
+										rewind(stdin);
+										printf("Enter a valid grade!");
+										scanf("%2s", grade);
+									}
 								}
 							}
+							strcpy(studentDetails[ID][2], "Y");
+							//calcCGPA1();
+							break;
+						case 2:
+							printf("Enter number of courses:");
+							scanf("%d", &subjectLoop);
+							while (subjectLoop > 6 || subjectLoop < 0) {
+								rewind(stdin);
+								printf("Enter a number between 1 to 6!");
+								scanf("%d", &subjectLoop);
+							}
+							studSem2GPA[ID][14] = subjectLoop;
+							for (int n = 0;n < subjectLoop;n++) {
+								printf("Enter course code for subject %d", n + 1);
+								scanf("%7s", studSem2Sub[ID][n]);//reads until 7 chars only
+								rewind(stdin);
+								while ((float)studSem2Sub[ID][n][6] - 48 < 0 || (float)studSem2Sub[ID][n][6] - 48 > 9) {
+									printf("Invalid course code!");
+									scanf("%7s", studSem2Sub[ID][n]);//reads until 7 chars only
+									rewind(stdin);
+								}
+								studSem2GPA[ID][n + 6] = (float)studSem2Sub[ID][n][6] - 48;//course weightage
+								studSem2GPA[ID][12] += studSem2GPA[ID][n + 6];
+								printf("Enter grade obtained:");
+								scanf("%2s", grade);
+								while (gradeLoop == 1) {
+									if (strcmp(grade, "A") == 0) {
+										studSem2GPA[ID][n] = 4.0;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "A-") == 0) {
+										studSem2GPA[ID][n] = 3.75;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "B+") == 0) {
+										studSem2GPA[ID][n] = 3.50;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "B") == 0) {
+										studSem2GPA[ID][n] = 3.00;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "B-") == 0) {
+										studSem2GPA[ID][n] = 2.75;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "C+") == 0) {
+										studSem2GPA[ID][n] = 2.50;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "C") == 0) {
+										studSem2GPA[ID][n] = 2.00;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "F") == 0) {
+										studSem2GPA[ID][n] = 0.00;
+										gradeLoop = 0;
+									}
+									else {
+										rewind(stdin);
+										printf("Enter a valid grade!");
+										scanf("%2s", grade);
+									}
+								}
+							}
+							strcpy(studentDetails[ID][3], "Y");
+							//calcCGPA2();
+							break;
+						case 3:
+							printf("Enter number of courses:");
+							scanf("%d", &subjectLoop);
+							while (subjectLoop > 6 || subjectLoop < 0) {
+								rewind(stdin);
+								printf("Enter a number between 1 to 6!");
+								scanf("%d", &subjectLoop);
+							}
+							studSem3GPA[ID][14] = subjectLoop;
+							for (int n = 0;n < subjectLoop;n++) {
+								printf("Enter course code for subject %d", n + 1);
+								scanf("%7s", studSem3Sub[ID][n]);//reads until 7 chars only
+								rewind(stdin);
+								while ((float)studSem3Sub[ID][n][6] - 48 < 0 || (float)studSem3Sub[ID][n][6] - 48 > 9) {
+									printf("Invalid course code!");
+									scanf("%7s", studSem3Sub[ID][n]);//reads until 7 chars only
+									rewind(stdin);
+								}
+								studSem3GPA[ID][n + 6] = (float)studSem3Sub[ID][n][6] - 48;//course weightage
+								studSem3GPA[ID][12] += studSem3GPA[ID][n + 6];
+								printf("Enter grade obtained:");
+								scanf("%2s", grade);
+								while (gradeLoop == 1) {
+									if (strcmp(grade, "A") == 0) {
+										studSem3GPA[ID][n] = 4.0;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "A-") == 0) {
+										studSem3GPA[ID][n] = 3.75;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "B+") == 0) {
+										studSem3GPA[ID][n] = 3.50;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "B") == 0) {
+										studSem3GPA[ID][n] = 3.00;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "B-") == 0) {
+										studSem3GPA[ID][n] = 2.75;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "C+") == 0) {
+										studSem3GPA[ID][n] = 2.50;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "C") == 0) {
+										studSem3GPA[ID][n] = 2.00;
+										gradeLoop = 0;
+									}
+									else if (strcmp(grade, "F") == 0) {
+										studSem3GPA[ID][n] = 0.00;
+										gradeLoop = 0;
+									}
+									else {
+										rewind(stdin);
+										printf("Enter a valid grade!");
+										scanf("%2s", grade);
+									}
+								}
+							}
+							strcpy(studentDetails[ID][4], "Y");
+							/*calcCGPA3();*/
 						}
 						break;
 					case 2:
-						printf("Enter number of courses:");
-						scanf("%d", &subjectLoop);
-						while (subjectLoop > 6 || subjectLoop < 0) {
-							rewind(stdin);
-							printf("Enter a number between 1 to 6!");
-							scanf("%d", &subjectLoop);
-						}
-						for (int n = 0;n < subjectLoop;n++) {
-							printf("Enter course code for subject %d", n + 1);
-							scanf("%7s", studSem2Sub[ID][n]);//reads until 7 chars only
-							rewind(stdin);
-							studSem2GPA[ID][n + 6] = (float)studSem2Sub[ID][n][6] - 48;//calculate course weightage
-							printf("Enter grade obtained:");
-							scanf("%2s", grade);
-							while (gradeLoop == 1) {
-								if (strcmp(grade, "A") == 0) {
-									studSem2GPA[ID][n] = 4.0;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "A-") == 0) {
-									studSem2GPA[ID][n] = 3.75;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "B+") == 0) {
-									studSem2GPA[ID][n] = 3.50;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "B") == 0) {
-									studSem2GPA[ID][n] = 3.00;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "B-") == 0) {
-									studSem2GPA[ID][n] = 2.75;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "C+") == 0) {
-									studSem2GPA[ID][n] = 2.50;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "C") == 0) {
-									studSem2GPA[ID][n] = 2.00;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "F") == 0) {
-									studSem2GPA[ID][n] = 0.00;
-									gradeLoop = 0;
-								}
-								else {
-									rewind(stdin);
-									printf("Enter a valid grade!");
-									scanf("%2s", grade);
-								}
-							}
-						}
-						break;
-					case 3:
-						printf("Enter number of courses:");
-						scanf("%d", &subjectLoop);
-						while (subjectLoop > 6 || subjectLoop < 0) {
-							rewind(stdin);
-							printf("Enter a number between 1 to 6!");
-							scanf("%d", &subjectLoop);
-						}
-						for (int n = 0;n < subjectLoop;n++) {
-							printf("Enter course code for subject %d", n + 1);
-							scanf("%7s", studSem3Sub[ID][n]);//reads until 7 chars only
-							rewind(stdin);
-							studSem3GPA[ID][n + 6] = (float)studSem3Sub[ID][n][6] - 48;//calculate course weightage
-							printf("Enter grade obtained:");
-							scanf("%2s", grade);
-							while (gradeLoop == 1) {
-								if (strcmp(grade, "A") == 0) {
-									studSem3GPA[ID][n] = 4.0;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "A-") == 0) {
-									studSem3GPA[ID][n] = 3.75;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "B+") == 0) {
-									studSem3GPA[ID][n] = 3.50;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "B") == 0) {
-									studSem3GPA[ID][n] = 3.00;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "B-") == 0) {
-									studSem3GPA[ID][n] = 2.75;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "C+") == 0) {
-									studSem3GPA[ID][n] = 2.50;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "C") == 0) {
-									studSem3GPA[ID][n] = 2.00;
-									gradeLoop = 0;
-								}
-								else if (strcmp(grade, "F") == 0) {
-									studSem3GPA[ID][n] = 0.00;
-									gradeLoop = 0;
-								}
-								else {
-									rewind(stdin);
-									printf("Enter a valid grade!");
-									scanf("%2s", grade);
-								}
-							}
-						}
-
-					}
-					break;
-				case 2:
-					printf("Enter edited semester:");
-					scanf("%d", &sessionSelect);
-					while (sessionSelect < 1 || sessionSelect>3) {
-						rewind(stdin);
-						printf("Enter 1,2 or 3 only!\n");
+						printf("Enter edited semester:");
 						scanf("%d", &sessionSelect);
-					}//check user input validity
-					
+						rewind(stdin);
+						while (sessionSelect < 1 || sessionSelect>3) {
+							rewind(stdin);
+							printf("Enter 1,2 or 3 only!\n");
+							scanf("%d", &sessionSelect);
+						}//check user input validity
+						if (sessionSelect == 1) {
+							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							scanf("%d",&month);
+							rewind(stdin);
+							while (month < 1 || month>12) {
+								printf("Enter a valid month! Starting month:");
+								scanf("%d", &month);
+								rewind(stdin);
+							}
+							switch (month) {
+							case 1:
+								strcpy(studSem1Sub[ID][6], "January");
+								break;
+							case 2:
+								strcpy(studSem1Sub[ID][6], "February");
+								break;
+							case 3:
+								strcpy(studSem1Sub[ID][6], "March");
+								break;
+							case 4:
+								strcpy(studSem1Sub[ID][6], "April");
+								break;
+							case 5:
+								strcpy(studSem1Sub[ID][6], "May");
+								break;
+							case 6:
+								strcpy(studSem1Sub[ID][6], "June");
+								break;
+							case 7:
+								strcpy(studSem1Sub[ID][6], "July");
+								break;
+							case 8:
+								strcpy(studSem1Sub[ID][6], "August");
+								break;
+							case 9:
+								strcpy(studSem1Sub[ID][6], "September");
+								break;
+							case 10:
+								strcpy(studSem1Sub[ID][6], "October");
+								break;
+							case 11:
+								strcpy(studSem1Sub[ID][6], "November");
+								break;
+							case 12:
+								strcpy(studSem1Sub[ID][6], "December");
+								break;
+							}
+							month = 0;//reset value
+							printf("Enter starting year (e.g 2023):");
+							scanf("%d", &year);
+							rewind(stdin);
+							while (year < 2000 || year>2100) {
+								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter starting year:");
+								scanf("%d", &year);
+								rewind(stdin);
+							}
+							itoa(year, studSem1Sub[ID][7],10);
+							year = 0;//reset value
+							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							scanf("%d", &month);
+							rewind(stdin);
+							while (month < 1 || month>12) {
+								printf("Enter a valid month! Ending month:");
+								scanf("%d", &month);
+								rewind(stdin);
+							}
+							switch (month) {
+							case 1:
+								strcpy(studSem1Sub[ID][8], "January");
+								break;
+							case 2:
+								strcpy(studSem1Sub[ID][8], "February");
+								break;
+							case 3:
+								strcpy(studSem1Sub[ID][8], "March");
+								break;
+							case 4:
+								strcpy(studSem1Sub[ID][8], "April");
+								break;
+							case 5:
+								strcpy(studSem1Sub[ID][8], "May");
+								break;
+							case 6:
+								strcpy(studSem1Sub[ID][8], "June");
+								break;
+							case 7:
+								strcpy(studSem1Sub[ID][8], "July");
+								break;
+							case 8:
+								strcpy(studSem1Sub[ID][8], "August");
+								break;
+							case 9:
+								strcpy(studSem1Sub[ID][8], "September");
+								break;
+							case 10:
+								strcpy(studSem1Sub[ID][8], "October");
+								break;
+							case 11:
+								strcpy(studSem1Sub[ID][8], "November");
+								break;
+							case 12:
+								strcpy(studSem1Sub[ID][8], "December");
+								break;
+							}
+							month = 0;//reset value
+							printf("Enter ending year (e.g 2023):");
+							scanf("%d", &year);
+							rewind(stdin);
+							while (year < 2000 || year>2100) {
+								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter ending year:");
+								scanf("%d", &year);
+								rewind(stdin);
+							}
+							itoa(year, studSem1Sub[ID][9], 10);
+							year = 0;//reset value
+							strcpy(studentDetails[ID][5], "Y");
+						}
+						else if (sessionSelect == 2) {
+							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							scanf("%d", &month);
+							rewind(stdin);
+							while (month < 1 || month>12) {
+								printf("Enter a valid month! Starting month:");
+								scanf("%d", &month);
+								rewind(stdin);
+							}
+							switch (month) {
+							case 1:
+								strcpy(studSem2Sub[ID][6], "January");
+								break;
+							case 2:
+								strcpy(studSem2Sub[ID][6], "February");
+								break;
+							case 3:
+								strcpy(studSem2Sub[ID][6], "March");
+								break;
+							case 4:
+								strcpy(studSem2Sub[ID][6], "April");
+								break;
+							case 5:
+								strcpy(studSem2Sub[ID][6], "May");
+								break;
+							case 6:
+								strcpy(studSem2Sub[ID][6], "June");
+								break;
+							case 7:
+								strcpy(studSem2Sub[ID][6], "July");
+								break;
+							case 8:
+								strcpy(studSem2Sub[ID][6], "August");
+								break;
+							case 9:
+								strcpy(studSem2Sub[ID][6], "September");
+								break;
+							case 10:
+								strcpy(studSem2Sub[ID][6], "October");
+								break;
+							case 11:
+								strcpy(studSem2Sub[ID][6], "November");
+								break;
+							case 12:
+								strcpy(studSem2Sub[ID][6], "December");
+								break;
+							}
+							month = 0;//reset value
+							printf("Enter starting year (e.g 2023):");
+							scanf("%d", &year);
+							rewind(stdin);
+							while (year < 2000 || year>2100) {
+								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter starting year:");
+								scanf("%d", &year);
+								rewind(stdin);
+							}
+							itoa(year, studSem2Sub[ID][7], 10);
+							year = 0;//reset value
+							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							scanf("%d", &month);
+							rewind(stdin);
+							while (month < 1 || month>12) {
+								printf("Enter a valid month! Ending month:");
+								scanf("%d", &month);
+								rewind(stdin);
+							}
+							switch (month) {
+							case 1:
+								strcpy(studSem2Sub[ID][8], "January");
+								break;
+							case 2:
+								strcpy(studSem2Sub[ID][8], "February");
+								break;
+							case 3:
+								strcpy(studSem2Sub[ID][8], "March");
+								break;
+							case 4:
+								strcpy(studSem2Sub[ID][8], "April");
+								break;
+							case 5:
+								strcpy(studSem2Sub[ID][8], "May");
+								break;
+							case 6:
+								strcpy(studSem2Sub[ID][8], "June");
+								break;
+							case 7:
+								strcpy(studSem2Sub[ID][8], "July");
+								break;
+							case 8:
+								strcpy(studSem2Sub[ID][8], "August");
+								break;
+							case 9:
+								strcpy(studSem2Sub[ID][8], "September");
+								break;
+							case 10:
+								strcpy(studSem2Sub[ID][8], "October");
+								break;
+							case 11:
+								strcpy(studSem2Sub[ID][8], "November");
+								break;
+							case 12:
+								strcpy(studSem2Sub[ID][8], "December");
+								break;
+							}
+							month = 0;//reset value
+							printf("Enter ending year (e.g 2023):");
+							scanf("%d", &year);
+							rewind(stdin);
+							while (year < 2000 || year>2100) {
+								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter ending year:");
+								scanf("%d", &year);
+								rewind(stdin);
+							}
+							itoa(year, studSem2Sub[ID][9], 10);
+							year = 0;//reset value
+							strcpy(studentDetails[ID][6], "Y");
+						}
+						else if (sessionSelect == 3) {
+							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							scanf("%d", &month);
+							rewind(stdin);
+							while (month < 1 || month>12) {
+								printf("Enter a valid month! Starting month:");
+								scanf("%d", &month);
+								rewind(stdin);
+							}
+							switch (month) {
+							case 1:
+								strcpy(studSem3Sub[ID][6], "January");
+								break;
+							case 2:
+								strcpy(studSem3Sub[ID][6], "February");
+								break;
+							case 3:
+								strcpy(studSem3Sub[ID][6], "March");
+								break;
+							case 4:
+								strcpy(studSem3Sub[ID][6], "April");
+								break;
+							case 5:
+								strcpy(studSem3Sub[ID][6], "May");
+								break;
+							case 6:
+								strcpy(studSem3Sub[ID][6], "June");
+								break;
+							case 7:
+								strcpy(studSem3Sub[ID][6], "July");
+								break;
+							case 8:
+								strcpy(studSem3Sub[ID][6], "August");
+								break;
+							case 9:
+								strcpy(studSem3Sub[ID][6], "September");
+								break;
+							case 10:
+								strcpy(studSem3Sub[ID][6], "October");
+								break;
+							case 11:
+								strcpy(studSem3Sub[ID][6], "November");
+								break;
+							case 12:
+								strcpy(studSem3Sub[ID][6], "December");
+								break;
+							}
+							month = 0;//reset value
+							printf("Enter starting year (e.g 2023):");
+							scanf("%d", &year);
+							rewind(stdin);
+							while (year < 2000 || year>2100) {
+								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter starting year:");
+								scanf("%d", &year);
+								rewind(stdin);
+							}
+							itoa(year, studSem3Sub[ID][7], 10);
+							year = 0;//reset value
+							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							scanf("%d", &month);
+							rewind(stdin);
+							while (month < 1 || month>12) {
+								printf("Enter a valid month! Ending month:");
+								scanf("%d", &month);
+								rewind(stdin);
+							}
+							switch (month) {
+							case 1:
+								strcpy(studSem3Sub[ID][8], "January");
+								break;
+							case 2:
+								strcpy(studSem3Sub[ID][8], "February");
+								break;
+							case 3:
+								strcpy(studSem3Sub[ID][8], "March");
+								break;
+							case 4:
+								strcpy(studSem3Sub[ID][8], "April");
+								break;
+							case 5:
+								strcpy(studSem3Sub[ID][8], "May");
+								break;
+							case 6:
+								strcpy(studSem3Sub[ID][8], "June");
+								break;
+							case 7:
+								strcpy(studSem3Sub[ID][8], "July");
+								break;
+							case 8:
+								strcpy(studSem3Sub[ID][8], "August");
+								break;
+							case 9:
+								strcpy(studSem3Sub[ID][8], "September");
+								break;
+							case 10:
+								strcpy(studSem3Sub[ID][8], "October");
+								break;
+							case 11:
+								strcpy(studSem3Sub[ID][8], "November");
+								break;
+							case 12:
+								strcpy(studSem3Sub[ID][8], "December");
+								break;
+							}
+							month = 0;//reset value
+							printf("Enter ending year (e.g 2023):");
+							scanf("%d", &year);
+							rewind(stdin);
+							while (year < 2000 || year>2100) {
+								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter ending year:");
+								scanf("%d", &year);
+								rewind(stdin);
+							}
+							itoa(year, studSem3Sub[ID][9], 10);
+							year = 0;//reset value
+							strcpy(studentDetails[ID][7], "Y");
+						}
+					}
+					printf("Would you like to continue to edit this students' details? Type 1 to continue. Any other value to exit.");
+					scanf("%d", &loop3);
+					rewind(stdin);
 				}
-			}
+				}
 			break;
-		case 3:break;
+		case 3:
+			while (loop4 == 1) {
+				printf("Enter student ID:");
+				scanf("%9s", IDcheck);
+				rewind(stdin);
+				for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
+					if (strcmp(studentDetails[ID][0], IDcheck) == 0) {
+						loop4 = 0;
+						break;
+					}
+				}//verify ID
+			}//enter ID and check if id is available
+			if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!"); }//runs if id is unavailable
+			else {
+				printf("Name:%s\n", studentDetails[ID][1]);
+				if (strcmp(studentDetails[ID][5], "Y") == 0)
+					printf("Semester start: %s %s\nSemester end: %s %s\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
+				else printf("Semester start: No record!\nSemester end: No record!\n");
+				printf("Semester 1 subjects taken: ");
+				if (strcmp(studentDetails[ID][2], "Y") == 0) {
+					for (i = 0;i < studSem1GPA[14];i++) {
+						printf("\n%s GPA:%.2f", studSem1Sub[ID][i],studSem1GPA[ID][i]);
+						printf("\nNumber of subjects: %d\nTotal credit hours: %d\nCGPA: %.2f\n", studSem1GPA[ID][14], studSem1GPA[ID][12], studSem1GPA[ID][13]);
+					}
+					printf("\n");
+				}
+				else printf("No record found!");
+				if (strcmp(studentDetails[ID][6], "Y") == 0)
+					printf("Semester start: %s %s\nSemester end: %s %s\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
+				else printf("Semester start: No record!\nSemester end: No record!\n");
+				printf("Semester 2 subjects taken: ");
+				if (strcmp(studentDetails[ID][3], "Y") == 0) {
+					for (i = 0;i < studSem2GPA[14];i++) {
+						printf("\n%s GPA:%.2f", studSem2Sub[ID][i], studSem2GPA[ID][i]);
+						printf("\nNumber of subjects: %d\nTotal credit hours: %d\nCGPA: %.2f\n", studSem2GPA[ID][14], studSem2GPA[ID][12], studSem2GPA[ID][13]);
+					}
+					printf("\n");
+				}
+				else printf("No record found!");
+				if (strcmp(studentDetails[ID][7], "Y") == 0)
+					printf("Semester start: %s %s\nSemester end: %s %s\n", studSem3Sub[ID][6], studSem3Sub[ID][7], studSem3Sub[ID][8], studSem3Sub[ID][9]);
+				else printf("Semester start: No record!\nSemester end: No record!\n");
+				printf("Semester 2 subjects taken: ");
+				if (strcmp(studentDetails[ID][4], "Y") == 0) {
+					for (i = 0;i < studSem3GPA[14];i++) {
+						printf("\n%s GPA:%.2f", studSem3Sub[ID][i], studSem3GPA[ID][i]);
+						printf("\nNumber of subjects: %d\nTotal credit hours: %d\nCGPA: %.2f\n", studSem3GPA[ID][14], studSem3GPA[ID][12], studSem3GPA[ID][13]);
+					}
+					printf("\n");
+				}
+				else printf("No record found!");
+
+			}
 		}
 	}
 }

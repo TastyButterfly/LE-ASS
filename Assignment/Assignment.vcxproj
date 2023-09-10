@@ -131,7 +131,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="AID.txt" />
-    <Text Include="SID.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

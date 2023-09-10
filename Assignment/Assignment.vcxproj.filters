@@ -23,8 +23,5 @@
     <Text Include="AID.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="SID.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
   </ItemGroup>
 </Project>
