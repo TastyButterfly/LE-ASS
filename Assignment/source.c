@@ -108,6 +108,7 @@ void adminMenu() {
 	//above is to print admin menu, clears console
 	int select=0, i, loop = 1, loop2 = 1,loop3=1,loop4=1, menu2select=0, subjectLoop=0, ID,check, semSelect=0, gradeLoop = 1,sessionSelect=0,month=0,year=0;
 	char IDcheck[10], grade[2],stdID[10],IDConfirm[10],stdName[60],nameConfirm[60];
+	float totalcgpa=0,wcgpa=0,totalcred=0;
 	while (loop == 1) {
 		printf("\n1.Add new student.\n2.Enter student course details.\n3.View students' CGPA and GPA score.\n0.Exit\n");//prints menu
 		scanf("%d", &select);
@@ -161,6 +162,9 @@ void adminMenu() {
 			studSem1GPA[ID][13] =0;
 			studSem2GPA[ID][13] = 0;
 			studSem3GPA[ID][13] = 0;
+			studSem1GPA[ID][12] = 0;
+			studSem2GPA[ID][12] = 0;
+			studSem3GPA[ID][12] = 0;
 			printf("Enter new student name:");
 			scanf("%59[^\n]", studentDetails[ID][1]);
 			rewind(stdin);
@@ -234,6 +238,7 @@ void adminMenu() {
 						subjectLoop = 0;
 						switch (semSelect) {
 						case 1:
+							subjectLoop = 0;//reset parameters
 							printf("Enter number of courses:");
 							scanf("%d", &subjectLoop);
 							while (subjectLoop > 6 || subjectLoop < 1) {
@@ -243,7 +248,7 @@ void adminMenu() {
 							}//check user input validity
 							studSem1GPA[ID][14] = subjectLoop;
 							for (int n = 0;n < subjectLoop;n++) {
-								printf("Enter course code for subject %d:", n + 1);
+								printf("Enter course code for subject %d: ", n + 1);
 								scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
 								rewind(stdin);
 								while ((float)studSem1Sub[ID][n][6]-48< 0 ||(float)studSem1Sub[ID][n][6]-48>9) {
@@ -255,6 +260,7 @@ void adminMenu() {
 								studSem1GPA[ID][12] += studSem1GPA[ID][n + 6];
 								printf("Enter grade obtained:");
 								scanf("%2s", grade);
+								gradeLoop = 1;
 								while (gradeLoop == 1) {
 									if (strcmp(grade, "A") == 0) {
 										studSem1GPA[ID][n] = 4.0;
@@ -292,13 +298,15 @@ void adminMenu() {
 										rewind(stdin);
 										printf("Enter a valid grade!");
 										scanf("%2s", grade);
+										rewind(stdin);
 									}
 								}
 							}
 							strcpy(studentDetails[ID][2], "Y");
-							//calcCGPA1();
+							calcCGPA(1,subjectLoop,ID);
 							break;
 						case 2:
+							subjectLoop = 0;//reset parameters
 							printf("Enter number of courses:");
 							scanf("%d", &subjectLoop);
 							while (subjectLoop > 6 || subjectLoop < 0) {
@@ -308,7 +316,7 @@ void adminMenu() {
 							}
 							studSem2GPA[ID][14] = subjectLoop;
 							for (int n = 0;n < subjectLoop;n++) {
-								printf("Enter course code for subject %d", n + 1);
+								printf("Enter course code for subject %d: ", n + 1);
 								scanf("%7s", studSem2Sub[ID][n]);//reads until 7 chars only
 								rewind(stdin);
 								while ((float)studSem2Sub[ID][n][6] - 48 < 0 || (float)studSem2Sub[ID][n][6] - 48 > 9) {
@@ -320,6 +328,7 @@ void adminMenu() {
 								studSem2GPA[ID][12] += studSem2GPA[ID][n + 6];
 								printf("Enter grade obtained:");
 								scanf("%2s", grade);
+								gradeLoop = 1;
 								while (gradeLoop == 1) {
 									if (strcmp(grade, "A") == 0) {
 										studSem2GPA[ID][n] = 4.0;
@@ -361,9 +370,10 @@ void adminMenu() {
 								}
 							}
 							strcpy(studentDetails[ID][3], "Y");
-							//calcCGPA2();
+							calcCGPA(2, subjectLoop, ID);
 							break;
 						case 3:
+							subjectLoop = 0;//reset parameters
 							printf("Enter number of courses:");
 							scanf("%d", &subjectLoop);
 							while (subjectLoop > 6 || subjectLoop < 0) {
@@ -373,7 +383,7 @@ void adminMenu() {
 							}
 							studSem3GPA[ID][14] = subjectLoop;
 							for (int n = 0;n < subjectLoop;n++) {
-								printf("Enter course code for subject %d", n + 1);
+								printf("Enter course code for subject %d: ", n + 1);
 								scanf("%7s", studSem3Sub[ID][n]);//reads until 7 chars only
 								rewind(stdin);
 								while ((float)studSem3Sub[ID][n][6] - 48 < 0 || (float)studSem3Sub[ID][n][6] - 48 > 9) {
@@ -385,6 +395,7 @@ void adminMenu() {
 								studSem3GPA[ID][12] += studSem3GPA[ID][n + 6];
 								printf("Enter grade obtained:");
 								scanf("%2s", grade);
+								gradeLoop = 1;
 								while (gradeLoop == 1) {
 									if (strcmp(grade, "A") == 0) {
 										studSem3GPA[ID][n] = 4.0;
@@ -426,11 +437,11 @@ void adminMenu() {
 								}
 							}
 							strcpy(studentDetails[ID][4], "Y");
-							/*calcCGPA3();*/
+							calcCGPA(3, subjectLoop, ID);
 						}
 						break;
 					case 2:
-						printf("Enter edited semester:");
+						printf("Enter edited semester (1,2 or 3):");
 						scanf("%d", &sessionSelect);
 						rewind(stdin);
 						while (sessionSelect < 1 || sessionSelect>3) {
@@ -439,7 +450,7 @@ void adminMenu() {
 							scanf("%d", &sessionSelect);
 						}//check user input validity
 						if (sessionSelect == 1) {
-							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
 							scanf("%d",&month);
 							rewind(stdin);
 							while (month < 1 || month>12) {
@@ -496,7 +507,7 @@ void adminMenu() {
 							}
 							itoa(year, studSem1Sub[ID][7],10);
 							year = 0;//reset value
-							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
 							scanf("%d", &month);
 							rewind(stdin);
 							while (month < 1 || month>12) {
@@ -556,7 +567,7 @@ void adminMenu() {
 							strcpy(studentDetails[ID][5], "Y");
 						}
 						else if (sessionSelect == 2) {
-							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
 							scanf("%d", &month);
 							rewind(stdin);
 							while (month < 1 || month>12) {
@@ -613,7 +624,7 @@ void adminMenu() {
 							}
 							itoa(year, studSem2Sub[ID][7], 10);
 							year = 0;//reset value
-							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
 							scanf("%d", &month);
 							rewind(stdin);
 							while (month < 1 || month>12) {
@@ -673,7 +684,7 @@ void adminMenu() {
 							strcpy(studentDetails[ID][6], "Y");
 						}
 						else if (sessionSelect == 3) {
-							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
 							scanf("%d", &month);
 							rewind(stdin);
 							while (month < 1 || month>12) {
@@ -730,7 +741,7 @@ void adminMenu() {
 							}
 							itoa(year, studSem3Sub[ID][7], 10);
 							year = 0;//reset value
-							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December");
+							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
 							scanf("%d", &month);
 							rewind(stdin);
 							while (month < 1 || month>12) {
@@ -810,73 +821,158 @@ void adminMenu() {
 			}//enter ID and check if id is available
 			if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!"); }//runs if id is unavailable
 			else {
+				system("cls");
 				printf("Name:%s\n", studentDetails[ID][1]);
-				if (strcmp(studentDetails[ID][5], "Y") == 0)
-					printf("Semester start: %s %s\nSemester end: %s %s\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
-				else printf("Semester start: No record!\nSemester end: No record!\n");
+				if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1
+					printf("Semester 1 start: %s %s\nSemester 1 end: %s %s\n", studSem1Sub[ID][6], studSem1Sub[ID][7], studSem1Sub[ID][8], studSem1Sub[ID][9]);
+				else printf("Semester 1 start: No record!\nSemester 1 end: No record!\n");
 				printf("Semester 1 subjects taken: ");
 				if (strcmp(studentDetails[ID][2], "Y") == 0) {
-					for (i = 0;i < studSem1GPA[14];i++) {
-						printf("\n%s GPA:%.2f", studSem1Sub[ID][i],studSem1GPA[ID][i]);
-						printf("\nNumber of subjects: %d\nTotal credit hours: %d\nCGPA: %.2f\n", studSem1GPA[ID][14], studSem1GPA[ID][12], studSem1GPA[ID][13]);
-					}
+					for (i = 0;i < studSem1GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem1Sub[ID][i],studSem1GPA[ID][i]);
+					printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem1GPA[ID][14], studSem1GPA[ID][12], studSem1GPA[ID][13]);
+					wcgpa += studSem1GPA[ID][13]*studSem1GPA[ID][12];
+					totalcred += studSem1GPA[ID][12];
 					printf("\n");
 				}
 				else printf("No record found!");
-				if (strcmp(studentDetails[ID][6], "Y") == 0)
-					printf("Semester start: %s %s\nSemester end: %s %s\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
-				else printf("Semester start: No record!\nSemester end: No record!\n");
+				if (strcmp(studentDetails[ID][6], "Y") == 0)//semester 2
+					printf("Semester 2 start: %s %s\nSemester 2 end: %s %s\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
+				else printf("Semester 2 start: No record!\nSemester 2 end: No record!\n");
 				printf("Semester 2 subjects taken: ");
 				if (strcmp(studentDetails[ID][3], "Y") == 0) {
-					for (i = 0;i < studSem2GPA[14];i++) {
-						printf("\n%s GPA:%.2f", studSem2Sub[ID][i], studSem2GPA[ID][i]);
-						printf("\nNumber of subjects: %d\nTotal credit hours: %d\nCGPA: %.2f\n", studSem2GPA[ID][14], studSem2GPA[ID][12], studSem2GPA[ID][13]);
-					}
+					for (i = 0;i <studSem2GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem2Sub[ID][i], studSem2GPA[ID][i]);
+					printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem2GPA[ID][14], studSem2GPA[ID][12], studSem2GPA[ID][13]);
+					wcgpa += studSem2GPA[ID][13]* studSem2GPA[ID][12];
+					totalcred += studSem2GPA[ID][12];
 					printf("\n");
 				}
 				else printf("No record found!");
-				if (strcmp(studentDetails[ID][7], "Y") == 0)
-					printf("Semester start: %s %s\nSemester end: %s %s\n", studSem3Sub[ID][6], studSem3Sub[ID][7], studSem3Sub[ID][8], studSem3Sub[ID][9]);
-				else printf("Semester start: No record!\nSemester end: No record!\n");
+				if (strcmp(studentDetails[ID][7], "Y") == 0)//semester 3
+					printf("Semester 3 start: %s %s\nSemester 3 end: %s %s\n", studSem3Sub[ID][6], studSem3Sub[ID][7], studSem3Sub[ID][8], studSem3Sub[ID][9]);
+				else printf("Semester 3 start: No record!\nSemester 3 end: No record!\n");
 				printf("Semester 2 subjects taken: ");
 				if (strcmp(studentDetails[ID][4], "Y") == 0) {
-					for (i = 0;i < studSem3GPA[14];i++) {
-						printf("\n%s GPA:%.2f", studSem3Sub[ID][i], studSem3GPA[ID][i]);
-						printf("\nNumber of subjects: %d\nTotal credit hours: %d\nCGPA: %.2f\n", studSem3GPA[ID][14], studSem3GPA[ID][12], studSem3GPA[ID][13]);
-					}
+					for (i = 0;i <studSem3GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem3Sub[ID][i], studSem3GPA[ID][i]);
+					printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem3GPA[ID][14], studSem3GPA[ID][12], studSem3GPA[ID][13]);
+					wcgpa += studSem3GPA[ID][13]* studSem3GPA[ID][12];
+					totalcred += studSem3GPA[ID][12];
 					printf("\n");
 				}
 				else printf("No record found!");
-
+				if(totalcred!=0)totalcgpa = wcgpa / totalcred;
+				printf("\nCGPA across 3 semesters:%.2f\n", totalcgpa);
 			}
 		}
 	}
 }
-	
+void studentMenu() {
+	int ID, loop = 1, i;
+	char IDcheck[10];
+	float wcgpa = 0, totalcred = 0, totalcgpa = 0;
+	system("cls");
+	while(loop==1){
+	printf("Enter student ID:");//enter ID and check if id is available
+	scanf("%9s", IDcheck);
+	rewind(stdin);
+	for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
+		if (strcmp(studentDetails[ID][0], IDcheck) == 0) {
+			loop = 0;
+			break;
+		}
+	}//verify ID
+}
+	if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!"); }//runs if id is unavailable
+	else {
+		printf("Name:%s\n", studentDetails[ID][1]);
+		if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1
+			printf("Semester 1 start: %s %s\nSemester 1 end: %s %s\n", studSem1Sub[ID][6], studSem1Sub[ID][7], studSem1Sub[ID][8], studSem1Sub[ID][9]);
+		else printf("Semester 1 start: No record!\nSemester 1 end: No record!\n");
+		printf("Semester 1 subjects taken: ");
+		if (strcmp(studentDetails[ID][2], "Y") == 0) {
+			for (i = 0;i < studSem1GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem1Sub[ID][i], studSem1GPA[ID][i]);
+			printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem1GPA[ID][14], studSem1GPA[ID][12], studSem1GPA[ID][13]);
+			wcgpa += studSem1GPA[ID][13] * studSem1GPA[ID][12];
+			totalcred += studSem1GPA[ID][12];
+			printf("\n");
+		}
+		else printf("No record found!");
+		if (strcmp(studentDetails[ID][6], "Y") == 0)//semester 2
+			printf("Semester 2 start: %s %s\nSemester 2 end: %s %s\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
+		else printf("Semester 2 start: No record!\nSemester 2 end: No record!\n");
+		printf("Semester 2 subjects taken: ");
+		if (strcmp(studentDetails[ID][3], "Y") == 0) {
+			for (i = 0;i < studSem2GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem2Sub[ID][i], studSem2GPA[ID][i]);
+			printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem2GPA[ID][14], studSem2GPA[ID][12], studSem2GPA[ID][13]);
+			wcgpa += studSem2GPA[ID][13] * studSem2GPA[ID][12];
+			totalcred += studSem2GPA[ID][12];
+			printf("\n");
+		}
+		else printf("No record found!");
+		if (strcmp(studentDetails[ID][7], "Y") == 0)//semester 3
+			printf("Semester 3 start: %s %s\nSemester 3 end: %s %s\n", studSem3Sub[ID][6], studSem3Sub[ID][7], studSem3Sub[ID][8], studSem3Sub[ID][9]);
+		else printf("Semester 3 start: No record!\nSemester 3 end: No record!\n");
+		printf("Semester 2 subjects taken: ");
+		if (strcmp(studentDetails[ID][4], "Y") == 0) {
+			for (i = 0;i <studSem3GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem3Sub[ID][i], studSem3GPA[ID][i]);
+			printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem3GPA[ID][14], studSem3GPA[ID][12], studSem3GPA[ID][13]);
+			wcgpa += studSem3GPA[ID][13] * studSem3GPA[ID][12];
+			totalcred += studSem3GPA[ID][12];
+			printf("\n");
+		}
+		else printf("No record found!");
+		if (totalcred != 0)totalcgpa = wcgpa / totalcred;
+		printf("\nCGPA across 3 semesters:%.2f\n", totalcgpa);
+	}
+}
+int calcCGPA(sem,sub,ID) {
+	int i;
+	float cred=0,wgpa=0;
+	switch (sem) {
+		case 1:
+			for (i = 0;i < sub;i++) {
+				cred += studSem1GPA[ID][i+6];
+				wgpa += studSem1GPA[ID][i] * studSem1GPA[ID][i + 6];
+			}
+			studSem1GPA[ID][13] = wgpa / cred;
+		case 2:
+			for (i = 0;i < sub;i++) {
+				cred += studSem2GPA[ID][i + 6];
+				wgpa += studSem2GPA[ID][i] * studSem2GPA[ID][i + 6];
+			}
+			studSem2GPA[ID][13] = wgpa / cred;
+		case 3:
+			for (i = 0;i < sub;i++) {
+				cred += studSem3GPA[ID][i + 6];
+				wgpa += studSem3GPA[ID][i] * studSem3GPA[ID][i + 6];
+			}
+			studSem3GPA[ID][13] = wgpa / cred;
+	}
+}
 void main(){
-	char loop = '1';
+	char loop = '1',studLoop='1';
 	while (loop == '1') {
 		attempt = 1;
 		menu();
 		if (menuSelect == 1) {
 			login();
-			if (loginSelect == 1) {
+			if (loginSelect == 1) {//admin menu selected
 				pass1 = 0, pass2 = 0;
 				while (pass1 == 0) { 
 					accID = 1;
-					getAID();
+					getAID();//get admin id
 				}
 				while (pass1 == 1 && pass2 == 0) {
-					getPW();
+					getPW();//get admin password
 				}
-				while (pass1 == 1 && pass2 == 1) { adminMenu();break; }
+				if(pass1 == 1 && pass2 == 1) { adminMenu();}//if admin password and id is correct
 			}
-			if (loginSelect == 2) {
-				pass3 = 0;
-				while (pass3 == 0) {
-					getSID();
+			if (loginSelect == 2) {//student details selected
+				while (studLoop == '1') {
+					studentMenu();
+					printf("Do you want to continue to view student details? Enter 1 to continue.");
+					scanf("%c",&studLoop);
+					rewind(stdin);
 				}
-				while (pass3 == 1) {}
 			}
 		}
 		else if (menuSelect==2){}
