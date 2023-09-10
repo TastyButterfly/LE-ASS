@@ -4,17 +4,24 @@
 #include <string.h>
 #pragma warning (disable:4996)
 int menuSelect,loginSelect,pass1,pass2,pass3,accID,linecheck,SIDline,attempt;
-char PIN[8], studentDetails[][8][60] = { {"KPKL1234","idk","Y","Y","Y","Y","Y","Y"},{""}}/*ID, name,subject entry (3 semesters), session entry (3 semesters)*/, studSem1Sub[][10][15] = {{"AAA1003","AAA1014","AAA1013","AAA1024","AAA1024","AAA1052","July","2023","October","2023"}}, studSem2Sub[][10][15] = {{"AAA1103","AAA1114","AAA1113","","","","November","2023","January","2024"}}, studSem3Sub[][10][15] = {{"AAA1203","AAA1214","AAA1213","AAA1224","AAA1224","AAA1252","February","2024","June","2024"}};//course codes(0-5), sem start(6/7), sem end(8/9)
+char PIN[8], studentDetails[][8][61] = { {"KPKL1234","idk","Y","Y","Y","Y","Y","Y"},{""}}/*ID, name,subject entry (3 semesters), session entry (3 semesters)*/, studSem1Sub[][10][15] = {{"AAA1003","AAA1014","AAA1013","AAA1024","AAA1024","AAA1052","July","2023","October","2023"}}, studSem2Sub[][10][15] = {{"AAA1103","AAA1114","AAA1113","","","","November","2023","January","2024"}}, studSem3Sub[][10][15] = {{"AAA1203","AAA1214","AAA1213","AAA1224","AAA1224","AAA1252","February","2024","June","2024"}};//course codes(0-5), sem start(6/7), sem end(8/9)
 char* PINcheck[] = {"234567","123456","234565"};
 float studSem1GPA[][15]={{4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6}}, studSem2GPA[][15] = { {4.0,4.0,4.0,0,0,0,3,4,3,0,0,0,10,4.0,3} }, studSem3GPA[][15] = { {4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6} };//gpa for respective course(0-5),sem credit hours(6-11),total credit hours(12),cgpa(13),number of subjects(14)
 void menu() {
-	for (int i = 0; i < 50; i++) {
-		putchar('=');
+	int i;//counter
+	for (i = 1;i <= 148;i++) {
+		putchar('*');
+		if (i == 70 || i == 140)printf("\n");
 	}
+	printf("Welcome to Kolej Pasar's Multipurpose CGPA Calculator!");
+	for (i = 1;i <= 148;i++) {
+		putchar('*');
+		if (i==8||i == 78|| i == 148)printf("\n");
+	}
+	printf("\n\n");
+	for (i = 0; i < 50; i++) putchar('=');
 	printf("\n%27s\n", "MENU");
-	for (int i = 0; i < 50; i++) {
-		putchar('=');
-	}
+	for (i = 0; i < 50; i++) putchar('=');
 	printf("\n1.CGPA System\n2.CGPA Target Calculator\n");
 	//above prints out menu interface and options
 	do { //do loop
@@ -107,7 +114,7 @@ void adminMenu() {
 	}
 	//above is to print admin menu, clears console
 	int select=0, i, loop = 1, loop2 = 1,loop3=1,loop4=1, menu2select=0, subjectLoop=0, ID,check, semSelect=0, gradeLoop = 1,sessionSelect=0,month=0,year=0;
-	char IDcheck[10], grade[2],stdID[10],IDConfirm[10],stdName[60],nameConfirm[60];
+	char IDcheck[10], grade[3],stdID[10],IDConfirm[10],stdName[61],nameConfirm[61];
 	float totalcgpa=0,wcgpa=0,totalcred=0;
 	while (loop == 1) {
 		printf("\n1.Add new student.\n2.Enter student course details.\n3.View students' CGPA and GPA score.\n0.Exit\n");//prints menu
@@ -165,16 +172,16 @@ void adminMenu() {
 			studSem1GPA[ID][12] = 0;
 			studSem2GPA[ID][12] = 0;
 			studSem3GPA[ID][12] = 0;
-			printf("Enter new student name:");
-			scanf("%59[^\n]", studentDetails[ID][1]);
+			printf("Enter new student name (max. 60 characters):");
+			scanf("%60[^\n]", studentDetails[ID][1]);
 			rewind(stdin);
 			printf("Confirm name (name cannot be changed!):");
-			scanf("%59[^\n]", nameConfirm);
+			scanf("%60[^\n]", nameConfirm);
 			rewind(stdin);
 			for (check = 0; check < (sizeof(studentDetails) / sizeof(studentDetails[0])) - 1;check++) {
 				if (strcmp(studentDetails[ID][1], studentDetails[check][1]) == 0) {
 					printf("Name is already used!\n");
-					printf("Enter new student name:");
+					printf("Enter new student name (max. 60 characters):");
 					scanf("%59[^\n]", studentDetails[ID][1]);
 					rewind(stdin);
 					printf("Confirm name (name cannot be changed!):");
@@ -218,14 +225,15 @@ void adminMenu() {
 						putchar('=');
 					}//print menu
 					menuSelect = 0;//reset parameters
-					printf("\nYou are now editing %s, %s's details\n1.Enter course code and grade obtained.\n2.Enter current semester session.\n", studentDetails[ID][0], studentDetails[ID][1]);
+					printf("\nYou are now editing %s, %s's details\n1.Enter course code and grade obtained.\n2.Enter current semester session.\n0.Exit\n", studentDetails[ID][0], studentDetails[ID][1]);
 					scanf("%d", &menu2select);
-					while (menu2select != 1 && menu2select != 2) {
+					while (menu2select != 1 && menu2select != 2 && menu2select!=0) {
 						rewind(stdin);
-						printf("Enter a value between 1 to 2!\n");
+						printf("Enter a value between 0 to 2!\n");
 						scanf("%d", &menu2select);
 					}//check user input validity
 					switch (menu2select) {
+					case 0:break;
 					case 1://input course details
 						semSelect = 0;
 						printf("Enter edited semester (1,2 or 3):");
@@ -834,7 +842,7 @@ void adminMenu() {
 					totalcred += studSem1GPA[ID][12];
 					printf("\n");
 				}
-				else printf("No record found!");
+				else printf("No record found!\n");
 				if (strcmp(studentDetails[ID][6], "Y") == 0)//semester 2
 					printf("Semester 2 start: %s %s\nSemester 2 end: %s %s\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
 				else printf("Semester 2 start: No record!\nSemester 2 end: No record!\n");
@@ -846,7 +854,7 @@ void adminMenu() {
 					totalcred += studSem2GPA[ID][12];
 					printf("\n");
 				}
-				else printf("No record found!");
+				else printf("No record found!\n");
 				if (strcmp(studentDetails[ID][7], "Y") == 0)//semester 3
 					printf("Semester 3 start: %s %s\nSemester 3 end: %s %s\n", studSem3Sub[ID][6], studSem3Sub[ID][7], studSem3Sub[ID][8], studSem3Sub[ID][9]);
 				else printf("Semester 3 start: No record!\nSemester 3 end: No record!\n");
@@ -858,9 +866,10 @@ void adminMenu() {
 					totalcred += studSem3GPA[ID][12];
 					printf("\n");
 				}
-				else printf("No record found!");
+				else printf("No record found!\n");
 				if(totalcred!=0)totalcgpa = wcgpa / totalcred;
 				printf("\nCGPA across 3 semesters:%.2f\n", totalcgpa);
+				break;
 			}
 		}
 	}
@@ -921,6 +930,7 @@ void studentMenu() {
 		}
 		else printf("No record found!");
 		if (totalcred != 0)totalcgpa = wcgpa / totalcred;
+		else totalcgpa = 0;
 		printf("\nCGPA across 3 semesters:%.2f\n", totalcgpa);
 	}
 }
