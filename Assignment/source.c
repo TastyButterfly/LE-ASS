@@ -958,6 +958,7 @@ int calcCGPA(sem,sub,ID) {
 			studSem3GPA[ID][13] = wgpa / cred;
 	}
 }
+void targetCalc() { ; }
 void main(){
 	char loop = '1',studLoop='1';
 	while (loop == '1') {
