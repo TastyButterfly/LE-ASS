@@ -210,12 +210,12 @@ void adminMenu() {
 				for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
 					if (strcmp(studentDetails[ID][0], IDcheck) == 0) {
 						loop2 = 0;
-						break;}
+						break;
+					}
 				}//verify ID
-			}//enter ID and check if id is available
-			if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!"); }//runs if id is unavailable
-			else {//if id is found in system:
-				while (loop3 == 1) {
+				if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!\n"); }
+			}//runs if id is unavailable
+				while (loop3 == 1) {//if id is found in system:
 					system("cls");
 					for (int i = 0; i < 50; i++) {
 						putchar('=');
@@ -813,7 +813,6 @@ void adminMenu() {
 					scanf("%d", &loop3);
 					rewind(stdin);
 				}
-				}
 			break;
 		case 3:
 			while (loop4 == 1) {
@@ -826,9 +825,8 @@ void adminMenu() {
 						break;
 					}
 				}//verify ID
-			}//enter ID and check if id is available
-			if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!"); }//runs if id is unavailable
-			else {
+				if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!\n"); }//runs if id is unavailable
+			}
 				system("cls");
 				printf("Name:%s\n", studentDetails[ID][1]);
 				if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1
@@ -870,7 +868,6 @@ void adminMenu() {
 				if(totalcred!=0)totalcgpa = wcgpa / totalcred;
 				printf("\nCGPA across 3 semesters:%.2f\n", totalcgpa);
 				break;
-			}
 		}
 	}
 }
@@ -879,18 +876,18 @@ void studentMenu() {
 	char IDcheck[10];
 	float wcgpa = 0, totalcred = 0, totalcgpa = 0;
 	system("cls");
-	while(loop==1){
-	printf("Enter student ID:");//enter ID and check if id is available
-	scanf("%9s", IDcheck);
-	rewind(stdin);
-	for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
-		if (strcmp(studentDetails[ID][0], IDcheck) == 0) {
-			loop = 0;
-			break;
-		}
-	}//verify ID
-	if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!"); }//runs if id is unavailable
-	else {
+	while (loop == 1) {
+		printf("Enter student ID:");//enter ID and check if id is available
+		scanf("%9s", IDcheck);
+		rewind(stdin);
+		for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
+			if (strcmp(studentDetails[ID][0], IDcheck) == 0) {
+				loop = 0;
+				break;
+			}
+		}//verify ID
+		if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!\n"); }
+	}//runs if id is unavailable
 		printf("Name:%s\n", studentDetails[ID][1]);
 		if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1
 			printf("Semester 1 start: %s %s\nSemester 1 end: %s %s\n", studSem1Sub[ID][6], studSem1Sub[ID][7], studSem1Sub[ID][8], studSem1Sub[ID][9]);
@@ -931,7 +928,6 @@ void studentMenu() {
 		if (totalcred != 0)totalcgpa = wcgpa / totalcred;
 		else totalcgpa = 0;
 		printf("\nCGPA across 3 semesters:%.2f\n", totalcgpa);
-	}
 }
 int calcCGPA(sem,sub,ID) {
 	int i;
