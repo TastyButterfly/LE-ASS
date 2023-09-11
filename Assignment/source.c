@@ -889,7 +889,6 @@ void studentMenu() {
 			break;
 		}
 	}//verify ID
-}
 	if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!"); }//runs if id is unavailable
 	else {
 		printf("Name:%s\n", studentDetails[ID][1]);
