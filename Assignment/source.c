@@ -54,7 +54,7 @@ void getAID() {
 	attempt++;
 }
 void getSID() {
-	char SID[9];
+	char SID[10];
 	int IDcheck=0,IDcheckline = 0;
 	if (attempt == 1) {
 		printf("Enter login credentials(0 to exit)\nStudent ID:");
