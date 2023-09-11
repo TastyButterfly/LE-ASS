@@ -114,7 +114,7 @@ void adminMenu() {
 	}
 	//above is to print admin menu, clears console
 	int select=0, i, loop = 1, loop2 = 1,loop3=1,loop4=1, menu2select=0, subjectLoop=0, ID,check, semSelect=0, gradeLoop = 1,sessionSelect=0,month=0,year=0;
-	char IDcheck[10], grade[3],stdID[10],IDConfirm[10],stdName[61],nameConfirm[61];
+	char IDcheck[10], grade[3],IDConfirm[10],stdName[61],nameConfirm[61];
 	float totalcgpa=0,wcgpa=0,totalcred=0;
 	while (loop == 1) {
 		printf("\n1.Add new student.\n2.Enter student course details.\n3.View students' CGPA and GPA score.\n0.Exit\n");//prints menu
@@ -134,7 +134,7 @@ void adminMenu() {
 				if (strcmp(studentDetails[ID][0], "") == 0) { break; }
 			}//check id validity
 			printf("Enter new student ID:");
-			scanf("%9s", studentDetails[ID][0]);
+			scanf("%8s", studentDetails[ID][0]);
 			rewind(stdin);
 			printf("Confirm ID (ID cannot be changed!):");
 			scanf("%9s", IDConfirm);
@@ -182,20 +182,20 @@ void adminMenu() {
 				if (strcmp(studentDetails[ID][1], studentDetails[check][1]) == 0) {
 					printf("Name is already used!\n");
 					printf("Enter new student name (max. 60 characters):");
-					scanf("%59[^\n]", studentDetails[ID][1]);
+					scanf("%60[^\n]", studentDetails[ID][1]);
 					rewind(stdin);
 					printf("Confirm name (name cannot be changed!):");
-					scanf("%59[^\n]", nameConfirm);
+					scanf("%60[^\n]", nameConfirm);
 					rewind(stdin);
 				}
 			}//check duplicate name
 			while (strcmp(studentDetails[ID][1], nameConfirm) != 0) {
 				printf("Name does not match!\n");
 				printf("Enter new student name:");
-				scanf("%59[^\n]", studentDetails[ID][1]);
+				scanf("%60[^\n]", studentDetails[ID][1]);
 				rewind(stdin);
 				printf("Confirm name (name cannot be changed!):");
-				scanf("%59[^\n]", nameConfirm);
+				scanf("%60[^\n]", nameConfirm);
 				rewind(stdin);
 			}//check name confirmation
 			printf("Would you like to continue editing student details? Enter 1 to continue, any other value to stop.");
