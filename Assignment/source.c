@@ -319,8 +319,7 @@ void adminMenu() {
 						case 1:
 							studSem1GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
-							printf("You have selected Semester 1.\n");
-							printf("Enter number of courses:");
+							printf("You have selected Semester 1.\nEnter number of courses:");
 							scanf("%d", &subjectLoop);
 							while (subjectLoop > 6 || subjectLoop < 1) {
 								rewind(stdin);
@@ -390,8 +389,7 @@ void adminMenu() {
 						case 2:
 							studSem2GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
-							printf("You have selected Semester 2.\n");
-							printf("Enter number of courses:");
+							printf("You have selected Semester 2.\nEnter number of courses:");
 							scanf("%d", &subjectLoop);
 							while (subjectLoop > 6 || subjectLoop < 0) {
 								rewind(stdin);
@@ -460,8 +458,7 @@ void adminMenu() {
 						case 3:
 							studSem3GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
-							printf("You have selected Semester 3.\n");
-							printf("Enter number of courses:");
+							printf("You have selected Semester 3.\nEnter the number of courses:");
 							scanf("%d", &subjectLoop);
 							while (subjectLoop > 6 || subjectLoop < 0) {
 								rewind(stdin);
