@@ -3,8 +3,17 @@
 #include <math.h>
 #include <string.h>
 #pragma warning (disable:4996)
-int menuSelect,loginSelect,pass1,pass2,pass3,accID,linecheck,SIDline,attempt;
-char PIN[8], studentDetails[][8][61] = { {"KPKL1234","idk","Y","Y","Y","Y","Y","Y"},{""}}/*ID, name,subject entry (3 semesters), session entry (3 semesters)*/, studSem1Sub[][10][15] = {{"AAA1003","AAA1014","AAA1013","AAA1024","AAA1024","AAA1052","July","2023","October","2023"}}, studSem2Sub[][10][15] = {{"AAA1103","AAA1114","AAA1113","","","","November","2023","January","2024"}}, studSem3Sub[][10][15] = {{"AAA1203","AAA1214","AAA1213","AAA1224","AAA1224","AAA1252","February","2024","June","2024"}};//course codes(0-5), sem start(6/7), sem end(8/9)
+#define A 4.00
+#define A_MINUS 3.75 
+#define B_PLUS 3.5 
+#define B 3.0
+#define B_MINUS 2.75 
+#define C_PLUS 2.5
+#define C 2.0 
+#define F 0.0
+
+int menuSelect=0,loginSelect=0,pass1=0,pass2=0,pass3=0,accID=0,attempt;
+char PIN[8]="000000", studentDetails[][8][61] = {{"KPKL1234","idk","Y","Y","Y","Y","Y","Y"},{""}}/*ID, name,subject entry (3 semesters), session entry (3 semesters)*/, studSem1Sub[][10][15] = {{"AAA1003","AAA1014","AAA1013","AAA1024","AAA1024","AAA1052","July","2023","October","2023"}}, studSem2Sub[][10][15] = {{"AAA1103","AAA1114","AAA1113","","","","November","2023","January","2024"}}, studSem3Sub[][10][15] = {{"AAA1203","AAA1214","AAA1213","AAA1224","AAA1224","AAA1252","February","2024","June","2024"}};//course codes(0-5), sem start(6/7), sem end(8/9)
 char* PINcheck[] = {"234567","123456","234565"};
 float studSem1GPA[][15]={{4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6}}, studSem2GPA[][15] = { {4.0,4.0,4.0,0,0,0,3,4,3,0,0,0,10,4.0,3} }, studSem3GPA[][15] = { {4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6} };//gpa for respective course(0-5),sem credit hours(6-11),total credit hours(12),cgpa(13),number of subjects(14)
 void menu() {
@@ -102,6 +111,66 @@ void getPW() {
 		pass2 = 1;
 	}
 	else {printf("Wrong password\n");}
+}
+void studentMenu() {
+	int ID, loop = 1, loop2 = 1, i;
+	char IDcheck[10];
+	float wcgpa = 0, totalcred = 0, totalcgpa = 0;
+	system("cls");
+	while (loop == 1) {
+		printf("Enter student ID:");//enter ID and check if id is available
+		scanf("%9s", IDcheck);
+		rewind(stdin);
+		for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
+			if (strcmp(studentDetails[ID][0], IDcheck) == 0) {
+				loop = 0;
+				break;
+			}
+		}//verify ID
+		if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!\n"); }
+	}//runs if id is unavailable
+	while (loop2 == 1) {
+		printf("Name:%s\n----------------------------------------------------------------------------------\n", studentDetails[ID][1]);
+		if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1
+			printf("Semester 1 start: %s %s\nSemester 1 end: %s %s\n-----------------------------------------\n", studSem1Sub[ID][6], studSem1Sub[ID][7], studSem1Sub[ID][8], studSem1Sub[ID][9]);
+		else printf("Semester 1 start: No record!\nSemester 1 end: No record!\n-----------------------------------------\n");
+		printf("Semester 1 subjects taken: ");
+		if (strcmp(studentDetails[ID][2], "Y") == 0) {
+			for (i = 0;i < studSem1GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem1Sub[ID][i], studSem1GPA[ID][i]);
+			printf("\n-----------------------------------------\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n----------------------------------------------------------------------------------\n", studSem1GPA[ID][14], studSem1GPA[ID][12], studSem1GPA[ID][13]);
+			wcgpa += studSem1GPA[ID][13] * studSem1GPA[ID][12];
+			totalcred += studSem1GPA[ID][12];
+		}
+		else printf("No record found!\n----------------------------------------------------------------------------------\n");
+		if (strcmp(studentDetails[ID][6], "Y") == 0)//semester 2
+			printf("Semester 2 start: %s %s\nSemester 2 end: %s %s\n-----------------------------------------\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
+		else printf("Semester 2 start: No record!\nSemester 2 end: No record!\n");
+		printf("Semester 2 subjects taken: ");
+		if (strcmp(studentDetails[ID][3], "Y") == 0) {
+			for (i = 0;i < studSem2GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem2Sub[ID][i], studSem2GPA[ID][i]);
+			printf("\n-----------------------------------------\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n----------------------------------------------------------------------------------\n", studSem2GPA[ID][14], studSem2GPA[ID][12], studSem2GPA[ID][13]);
+			wcgpa += studSem2GPA[ID][13] * studSem2GPA[ID][12];
+			totalcred += studSem2GPA[ID][12];
+		}
+		else printf("No record found!\n----------------------------------------------------------------------------------\n");
+		if (strcmp(studentDetails[ID][7], "Y") == 0)//semester 3
+			printf("Semester 3 start: %s %s\nSemester 3 end: %s %s\n-----------------------------------------\n", studSem3Sub[ID][6], studSem3Sub[ID][7], studSem3Sub[ID][8], studSem3Sub[ID][9]);
+		else printf("Semester 3 start: No record!\nSemester 3 end: No record!\n");
+		printf("Semester 2 subjects taken: ");
+		if (strcmp(studentDetails[ID][4], "Y") == 0) {
+			for (i = 0;i < studSem3GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem3Sub[ID][i], studSem3GPA[ID][i]);
+			printf("\n-----------------------------------------\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n----------------------------------------------------------------------------------\n", studSem3GPA[ID][14], studSem3GPA[ID][12], studSem3GPA[ID][13]);
+			wcgpa += studSem3GPA[ID][13] * studSem3GPA[ID][12];
+			totalcred += studSem3GPA[ID][12];
+		}
+		else printf("No record found!\n----------------------------------------------------------------------------------\n");
+		if (totalcred != 0)totalcgpa = wcgpa / totalcred;
+		else totalcgpa = 0;
+		printf("CGPA across 3 semesters:%.2f\n----------------------------------------------------------------------------------\n", totalcgpa);
+		printf("\nDo you want to continue to view student details? Enter 1 to continue.");
+		if (scanf("%d", &loop2) == 0)loop2 = 0;//runs if user inputs non-int value, regards it as exit loop
+		rewind(stdin);
+	}
 }
 void adminMenu() {
 	//above is to print admin menu, clears console
@@ -247,6 +316,7 @@ void adminMenu() {
 						switch (semSelect) {
 						case 1:
 							subjectLoop = 0;//reset parameters
+							system("cls");
 							printf("Enter number of courses:");
 							scanf("%d", &subjectLoop);
 							while (subjectLoop > 6 || subjectLoop < 1) {
@@ -256,7 +326,7 @@ void adminMenu() {
 							}//check user input validity
 							studSem1GPA[ID][14] = subjectLoop;
 							for (int n = 0;n < subjectLoop;n++) {
-								printf("Enter course code for subject %d: ", n + 1);
+								printf("Enter course code for subject %d:", n + 1);
 								scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
 								rewind(stdin);
 								while ((float)studSem1Sub[ID][n][6]-48< 0 ||(float)studSem1Sub[ID][n][6]-48>9) {
@@ -271,35 +341,35 @@ void adminMenu() {
 								gradeLoop = 1;
 								while (gradeLoop == 1) {
 									if (strcmp(grade, "A") == 0) {
-										studSem1GPA[ID][n] = 4.0;
+										studSem1GPA[ID][n] = A;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "A-") == 0) {
-										studSem1GPA[ID][n] = 3.75;
+										studSem1GPA[ID][n] = A_MINUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "B+") == 0) {
-										studSem1GPA[ID][n] = 3.50;
+										studSem1GPA[ID][n] = B_PLUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "B") == 0) {
-										studSem1GPA[ID][n] = 3.00;
+										studSem1GPA[ID][n] = B;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "B-") == 0) {
-										studSem1GPA[ID][n] = 2.75;
+										studSem1GPA[ID][n] = B_MINUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "C+") == 0) {
-										studSem1GPA[ID][n] = 2.50;
+										studSem1GPA[ID][n] = C_PLUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "C") == 0) {
-										studSem1GPA[ID][n] = 2.00;
+										studSem1GPA[ID][n] = C;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "F") == 0) {
-										studSem1GPA[ID][n] = 0.00;
+										studSem1GPA[ID][n] = F;
 										gradeLoop = 0;
 									}
 									else {
@@ -309,6 +379,7 @@ void adminMenu() {
 										rewind(stdin);
 									}
 								}
+								printf("-------------------------------------------\n");
 							}
 							strcpy(studentDetails[ID][2], "Y");
 							calcCGPA(1,subjectLoop,ID);
@@ -339,35 +410,35 @@ void adminMenu() {
 								gradeLoop = 1;
 								while (gradeLoop == 1) {
 									if (strcmp(grade, "A") == 0) {
-										studSem2GPA[ID][n] = 4.0;
+										studSem2GPA[ID][n] = A;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "A-") == 0) {
-										studSem2GPA[ID][n] = 3.75;
+										studSem2GPA[ID][n] = A_MINUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "B+") == 0) {
-										studSem2GPA[ID][n] = 3.50;
+										studSem2GPA[ID][n] = B_PLUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "B") == 0) {
-										studSem2GPA[ID][n] = 3.00;
+										studSem2GPA[ID][n] = B;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "B-") == 0) {
-										studSem2GPA[ID][n] = 2.75;
+										studSem2GPA[ID][n] = B_MINUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "C+") == 0) {
-										studSem2GPA[ID][n] = 2.50;
+										studSem2GPA[ID][n] = C_PLUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "C") == 0) {
-										studSem2GPA[ID][n] = 2.00;
+										studSem2GPA[ID][n] = C;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "F") == 0) {
-										studSem2GPA[ID][n] = 0.00;
+										studSem2GPA[ID][n] = F;
 										gradeLoop = 0;
 									}
 									else {
@@ -406,35 +477,35 @@ void adminMenu() {
 								gradeLoop = 1;
 								while (gradeLoop == 1) {
 									if (strcmp(grade, "A") == 0) {
-										studSem3GPA[ID][n] = 4.0;
+										studSem3GPA[ID][n] = A;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "A-") == 0) {
-										studSem3GPA[ID][n] = 3.75;
+										studSem3GPA[ID][n] = A_MINUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "B+") == 0) {
-										studSem3GPA[ID][n] = 3.50;
+										studSem3GPA[ID][n] = B_PLUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "B") == 0) {
-										studSem3GPA[ID][n] = 3.00;
+										studSem3GPA[ID][n] = B;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "B-") == 0) {
-										studSem3GPA[ID][n] = 2.75;
+										studSem3GPA[ID][n] = B_MINUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "C+") == 0) {
-										studSem3GPA[ID][n] = 2.50;
+										studSem3GPA[ID][n] = C_PLUS;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "C") == 0) {
-										studSem3GPA[ID][n] = 2.00;
+										studSem3GPA[ID][n] = C;
 										gradeLoop = 0;
 									}
 									else if (strcmp(grade, "F") == 0) {
-										studSem3GPA[ID][n] = 0.00;
+										studSem3GPA[ID][n] = F;
 										gradeLoop = 0;
 									}
 									else {
@@ -819,119 +890,10 @@ void adminMenu() {
 				}
 			break;
 		case 3:
-			while (loop4 == 1) {
-				printf("Enter student ID:");
-				scanf("%9s", IDcheck);
-				rewind(stdin);
-				for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
-					if (strcmp(studentDetails[ID][0], IDcheck) == 0) {
-						loop4 = 0;
-						break;
-					}
-				}//verify ID
-				if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!\n"); }//runs if id is unavailable
-			}
-				system("cls");
-				printf("Name:%s\n", studentDetails[ID][1]);
-				if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1
-					printf("Semester 1 start: %s %s\nSemester 1 end: %s %s\n", studSem1Sub[ID][6], studSem1Sub[ID][7], studSem1Sub[ID][8], studSem1Sub[ID][9]);
-				else printf("Semester 1 start: No record!\nSemester 1 end: No record!\n");
-				printf("Semester 1 subjects taken: ");
-				if (strcmp(studentDetails[ID][2], "Y") == 0) {
-					for (i = 0;i < studSem1GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem1Sub[ID][i],studSem1GPA[ID][i]);
-					printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem1GPA[ID][14], studSem1GPA[ID][12], studSem1GPA[ID][13]);
-					wcgpa += studSem1GPA[ID][13]*studSem1GPA[ID][12];
-					totalcred += studSem1GPA[ID][12];
-					printf("\n");
-				}
-				else printf("No record found!\n");
-				if (strcmp(studentDetails[ID][6], "Y") == 0)//semester 2
-					printf("Semester 2 start: %s %s\nSemester 2 end: %s %s\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
-				else printf("Semester 2 start: No record!\nSemester 2 end: No record!\n");
-				printf("Semester 2 subjects taken: ");
-				if (strcmp(studentDetails[ID][3], "Y") == 0) {
-					for (i = 0;i <studSem2GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem2Sub[ID][i], studSem2GPA[ID][i]);
-					printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem2GPA[ID][14], studSem2GPA[ID][12], studSem2GPA[ID][13]);
-					wcgpa += studSem2GPA[ID][13]* studSem2GPA[ID][12];
-					totalcred += studSem2GPA[ID][12];
-					printf("\n");
-				}
-				else printf("No record found!\n");
-				if (strcmp(studentDetails[ID][7], "Y") == 0)//semester 3
-					printf("Semester 3 start: %s %s\nSemester 3 end: %s %s\n", studSem3Sub[ID][6], studSem3Sub[ID][7], studSem3Sub[ID][8], studSem3Sub[ID][9]);
-				else printf("Semester 3 start: No record!\nSemester 3 end: No record!\n");
-				printf("Semester 2 subjects taken: ");
-				if (strcmp(studentDetails[ID][4], "Y") == 0) {
-					for (i = 0;i <studSem3GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem3Sub[ID][i], studSem3GPA[ID][i]);
-					printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem3GPA[ID][14], studSem3GPA[ID][12], studSem3GPA[ID][13]);
-					wcgpa += studSem3GPA[ID][13]* studSem3GPA[ID][12];
-					totalcred += studSem3GPA[ID][12];
-					printf("\n");
-				}
-				else printf("No record found!\n");
-				if(totalcred!=0)totalcgpa = wcgpa / totalcred;
-				printf("\nCGPA across 3 semesters:%.2f\n", totalcgpa);
-				break;
+			studentMenu();
+			break;
 		}
 	}
-}
-void studentMenu() {
-	int ID, loop = 1, i;
-	char IDcheck[10];
-	float wcgpa = 0, totalcred = 0, totalcgpa = 0;
-	system("cls");
-	while (loop == 1) {
-		printf("Enter student ID:");//enter ID and check if id is available
-		scanf("%9s", IDcheck);
-		rewind(stdin);
-		for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
-			if (strcmp(studentDetails[ID][0], IDcheck) == 0) {
-				loop = 0;
-				break;
-			}
-		}//verify ID
-		if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!\n"); }
-	}//runs if id is unavailable
-		printf("Name:%s\n", studentDetails[ID][1]);
-		if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1
-			printf("Semester 1 start: %s %s\nSemester 1 end: %s %s\n", studSem1Sub[ID][6], studSem1Sub[ID][7], studSem1Sub[ID][8], studSem1Sub[ID][9]);
-		else printf("Semester 1 start: No record!\nSemester 1 end: No record!\n");
-		printf("Semester 1 subjects taken: ");
-		if (strcmp(studentDetails[ID][2], "Y") == 0) {
-			for (i = 0;i < studSem1GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem1Sub[ID][i], studSem1GPA[ID][i]);
-			printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem1GPA[ID][14], studSem1GPA[ID][12], studSem1GPA[ID][13]);
-			wcgpa += studSem1GPA[ID][13] * studSem1GPA[ID][12];
-			totalcred += studSem1GPA[ID][12];
-			printf("\n");
-		}
-		else printf("No record found!");
-		if (strcmp(studentDetails[ID][6], "Y") == 0)//semester 2
-			printf("Semester 2 start: %s %s\nSemester 2 end: %s %s\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
-		else printf("Semester 2 start: No record!\nSemester 2 end: No record!\n");
-		printf("Semester 2 subjects taken: ");
-		if (strcmp(studentDetails[ID][3], "Y") == 0) {
-			for (i = 0;i < studSem2GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem2Sub[ID][i], studSem2GPA[ID][i]);
-			printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem2GPA[ID][14], studSem2GPA[ID][12], studSem2GPA[ID][13]);
-			wcgpa += studSem2GPA[ID][13] * studSem2GPA[ID][12];
-			totalcred += studSem2GPA[ID][12];
-			printf("\n");
-		}
-		else printf("No record found!");
-		if (strcmp(studentDetails[ID][7], "Y") == 0)//semester 3
-			printf("Semester 3 start: %s %s\nSemester 3 end: %s %s\n", studSem3Sub[ID][6], studSem3Sub[ID][7], studSem3Sub[ID][8], studSem3Sub[ID][9]);
-		else printf("Semester 3 start: No record!\nSemester 3 end: No record!\n");
-		printf("Semester 2 subjects taken: ");
-		if (strcmp(studentDetails[ID][4], "Y") == 0) {
-			for (i = 0;i <studSem3GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem3Sub[ID][i], studSem3GPA[ID][i]);
-			printf("\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n", studSem3GPA[ID][14], studSem3GPA[ID][12], studSem3GPA[ID][13]);
-			wcgpa += studSem3GPA[ID][13] * studSem3GPA[ID][12];
-			totalcred += studSem3GPA[ID][12];
-			printf("\n");
-		}
-		else printf("No record found!");
-		if (totalcred != 0)totalcgpa = wcgpa / totalcred;
-		else totalcgpa = 0;
-		printf("\nCGPA across 3 semesters:%.2f\n", totalcgpa);
 }
 int calcCGPA(sem,sub,ID) {
 	int i;
@@ -956,6 +918,7 @@ int calcCGPA(sem,sub,ID) {
 			}
 			studSem3GPA[ID][13] = wgpa / cred;
 	}
+	return 0;
 }
 void targetCalc() {
 	printf("\nThis area is off limits!\n");
@@ -979,12 +942,7 @@ void main(){
 				if(pass1 == 1 && pass2 == 1) { adminMenu();}//if admin password and id is correct
 			}
 			if (loginSelect == 2) {//student details selected
-				while (studLoop ==1) {
-					studentMenu();
-					printf("Do you want to continue to view student details? Enter 1 to continue.");
-					if (scanf("%d", &studLoop) == 0)studLoop = 0;//runs if user inputs non-int value, regards it as exit loop
-					rewind(stdin);
-				}
+				studentMenu();
 			}
 		}
 		else if (menuSelect == 2) { targetCalc(); }
