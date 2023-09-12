@@ -12,8 +12,8 @@
 #define C 2.0 
 #define F 0.0
 
-int menuSelect=0,loginSelect=0,pass1=0,pass2=0,pass3=0,accID=0,attempt;
-char PIN[8]="000000", studentDetails[][8][61] = {{"KPKL1234","idk","Y","Y","Y","Y","Y","Y"},{""}}/*ID, name,subject entry (3 semesters), session entry (3 semesters)*/, studSem1Sub[][10][15] = {{"AAA1003","AAA1014","AAA1013","AAA1024","AAA1024","AAA1052","July","2023","October","2023"}}, studSem2Sub[][10][15] = {{"AAA1103","AAA1114","AAA1113","","","","November","2023","January","2024"}}, studSem3Sub[][10][15] = {{"AAA1203","AAA1214","AAA1213","AAA1224","AAA1224","AAA1252","February","2024","June","2024"}};//course codes(0-5), sem start(6/7), sem end(8/9)
+int menuSelect=0,loginSelect=0,pass1,pass2,pass3,accID,attempt;
+char PIN[8], studentDetails[][8][61] = {{"KPKL1234","idk","Y","Y","Y","Y","Y","Y"},{""}}/*ID, name,subject entry (3 semesters), session entry (3 semesters)*/, studSem1Sub[][10][15] = {{"AAA1003","AAA1014","AAA1013","AAA1024","AAA1024","AAA1052","July","2023","October","2023"}}, studSem2Sub[][10][15] = {{"AAA1103","AAA1114","AAA1113","","","","November","2023","January","2024"}}, studSem3Sub[][10][15] = {{"AAA1203","AAA1214","AAA1213","AAA1224","AAA1224","AAA1252","February","2024","June","2024"}};//course codes(0-5), sem start(6/7), sem end(8/9)
 char* PINcheck[] = {"234567","123456","234565"};
 float studSem1GPA[][15]={{4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6}}, studSem2GPA[][15] = { {4.0,4.0,4.0,0,0,0,3,4,3,0,0,0,10,4.0,3} }, studSem3GPA[][15] = { {4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6} };//gpa for respective course(0-5),sem credit hours(6-11),total credit hours(12),cgpa(13),number of subjects(14)
 void menu() {
@@ -127,8 +127,8 @@ void studentMenu() {
 				break;
 			}
 		}//verify ID
-		if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!\n"); }
-	}//runs if id is unavailable
+		if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) printf("Record not found!\n");//runs if id is unavailable
+	}
 	while (loop2 == 1) {
 		printf("Name:%s\n----------------------------------------------------------------------------------\n", studentDetails[ID][1]);
 		if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1
@@ -200,8 +200,8 @@ void adminMenu() {
 		case 1://add new student
 			system("cls");
 			for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
-				if (strcmp(studentDetails[ID][0], "") == 0) { break; }
-			}//check id validity
+				if (strcmp(studentDetails[ID][0], "") == 0) break;//check id validity
+			}
 			printf("Enter new student ID:");
 			scanf("%8s", studentDetails[ID][0]);
 			rewind(stdin);
@@ -241,7 +241,7 @@ void adminMenu() {
 			studSem1GPA[ID][12] = 0;
 			studSem2GPA[ID][12] = 0;
 			studSem3GPA[ID][12] = 0;
-			printf("Enter new student name (max. 60 characters):");
+			printf("\nEnter new student name (max. 60 characters):");
 			scanf("%60[^\n]", studentDetails[ID][1]);
 			rewind(stdin);
 			printf("Confirm name (name cannot be changed!):");
@@ -282,8 +282,8 @@ void adminMenu() {
 						break;
 					}
 				}//verify ID
-				if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) { printf("Record not found!\n"); }
-			}//runs if id is unavailable
+				if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) printf("Record not found!\n");//runs if id is unavailable
+			}
 				while (loop3 == 1) {//if id is found in system:
 					system("cls");
 					for (int i = 0; i < 50; i++) {
@@ -293,7 +293,7 @@ void adminMenu() {
 					for (int i = 0; i < 50; i++) {
 						putchar('=');
 					}//print menu
-					menuSelect = 0;//reset parameters
+					menu2select = 0;//reset parameters
 					printf("\nYou are now editing %s, %s's details\n1.Enter course code and grade obtained.\n2.Enter current semester session.\n0.Exit\n", studentDetails[ID][0], studentDetails[ID][1]);
 					scanf("%d", &menu2select);
 					while (menu2select != 1 && menu2select != 2 && menu2select!=0) {
@@ -521,7 +521,7 @@ void adminMenu() {
 								}
 								printf("-------------------------------------------\n");
 							}
-							printf("Course code and grade obtained successfully!\n\n");
+							printf("Course code and grade obtained entered successfully!\n\n");
 							strcpy(studentDetails[ID][4], "Y");
 							calcCGPA(3, subjectLoop, ID);
 						}
@@ -650,7 +650,7 @@ void adminMenu() {
 							}
 							itoa(year, studSem1Sub[ID][9], 10);
 							year = 0;//reset value
-							printf("\n\nSemester 1 session date added sucessfully!\n");
+							printf("\n\nSemester 1 session date added sucessfully!\n\n");
 							strcpy(studentDetails[ID][5], "Y");
 						}
 						else if (sessionSelect == 2) {
@@ -768,7 +768,7 @@ void adminMenu() {
 							}
 							itoa(year, studSem2Sub[ID][9], 10);
 							year = 0;//reset value
-							printf("\n\nSemester 2 session date added sucessfully!\n");
+							printf("\n\nSemester 2 session date added sucessfully!\n\n");
 							strcpy(studentDetails[ID][6], "Y");
 						}
 						else if (sessionSelect == 3) {
@@ -886,7 +886,7 @@ void adminMenu() {
 							}
 							itoa(year, studSem3Sub[ID][9], 10);
 							year = 0;//reset value
-							printf("\n\nSemester 3 session date added sucessfully!\n");
+							printf("\n\nSemester 3 session date added sucessfully!\n\n");
 							strcpy(studentDetails[ID][7], "Y");
 						}
 					}
@@ -927,6 +927,74 @@ int calcCGPA(sem,sub,ID) {
 	return 0;
 }
 void targetCalc() {
+	int i, select=0,mpuCred=0,nCred=0,loop=1,loop2=1,ID;//nCred=normal total credit hours
+	char IDcheck[10];
+	float lastCGPA=0,tMPUGPA=0,tnGPA=0,tCGPA;//tnGPA=target normal GPA
+	system("cls");
+	for (i = 0; i < 50; i++) putchar('=');
+	printf("\n%41s\n", "WELCOME TO CGPA TARGET CALCULATOR");
+	for (i = 0; i < 50; i++) putchar('=');
+	printf("\nMaking your college life easier!\n1.Import CGPA from existing student ID\n2.Manually input last semester's CGPA\n");
+	while (scanf("%d", &select) == 0 || select != 1 && select != 2) {
+		rewind(stdin);
+		printf("Invalid input! Enter 1 or 2 only!\n");
+	}
+	rewind(stdin);
+	if (select == 1) {
+		while (loop == 1) {
+			printf("Enter student ID:");//enter ID and check if id is available
+			scanf("%9s", IDcheck);
+			rewind(stdin);
+			for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
+				if (strcmp(studentDetails[ID][0], IDcheck) == 0) {
+					loop = 0;
+					break;
+				}
+			}//verify ID
+			if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) printf("Record not found!\n");//runs if id is unavailable
+		}
+		if (strcmp(studentDetails[ID][4], "Y") == 0) {
+			printf("\nHello, %s. Your last semester's (Semester 3) CGPA is %.2f\n", studentDetails[ID][1], studSem3GPA[ID][13]);
+			lastCGPA = studSem3GPA[ID][13];
+		}
+		else if (strcmp(studentDetails[ID][3], "Y") == 0) {
+			printf("\nHello, %s. Your last semester's (Semester 2) CGPA is %.2f\n", studentDetails[ID][1], studSem2GPA[ID][13]);
+			lastCGPA = studSem2GPA[ID][13];
+		}
+		else if (strcmp(studentDetails[ID][2], "Y") == 0) {
+			printf("\nHello, %s. Your last semester's (Semester 1) CGPA is %.2f\n", studentDetails[ID][1], studSem1GPA[ID][13]);
+			lastCGPA = studSem1GPA[ID][13];
+		}
+		else {
+			printf("\nHello %s. Unfortunately, you have not entered any subjects into the system yet. Hence, your last semester's CGPA cannot be determined. Please manually enter your last semester's CGPA.\n", studentDetails[ID][1]);
+			select = 2;
+		}
+	}
+	if (select == 2) {//else if is not used here as the user may be directed here even though they selected 1 (refer to the else clause)
+		printf("\nEnter your last semester's CGPA:");
+		while (scanf("%5f", &lastCGPA) == 0 || lastCGPA < 0 || lastCGPA>4) {
+			rewind(stdin);
+			printf("Enter a valid CGPA between 0 and 4!\n\nEnter your last semester's CGPA:");
+		}
+		lastCGPA = round(lastCGPA * 100) / 100;
+		rewind(stdin);
+	}
+	printf("\nEnter the total credit hours for MPU subjects:");
+	while (scanf("%d", &mpuCred) == 0 || mpuCred< 0) {
+		rewind(stdin);
+		printf("Enter a valid positive integer!\n\nEnter the total credit hours for MPU subjects:");
+	}
+	rewind(stdin);
+	printf("\n\nEnter the total credit hours for non-MPU subjects:");
+	while (scanf("%d", &nCred) == 0 || nCred < 0) {
+		rewind(stdin);
+		printf("Enter a valid positive integer!\n\nEnter the total credit hours for non-MPU subjects:");
+	}
+	rewind(stdin);
+	system("cls");
+	tCGPA =(ceil(lastCGPA * 10) / 10)+0.1;
+	if (tCGPA > 4)tCGPA = 4;//ensure target CGPA does not exceed 4.0 as it is not possible
+	printf("Your last semester's CGPA (rounded to 2 d.p) is %.2f\nYour targeted CGPA is %.2f\n\n------------------------------------------\n",lastCGPA,tCGPA);
 	printf("\nThis area is off limits!\n");
 }
 void main(){
