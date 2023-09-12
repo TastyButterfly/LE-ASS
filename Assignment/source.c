@@ -105,8 +105,8 @@ void login() {
 void getPW() {
 	printf("Enter PIN:");
 	scanf("%7s", PIN);
+	rewind(stdin);
 	if (strcmp(PIN,PINcheck[accID])==0) {
-		rewind(stdin);
 		printf("Access granted\n");
 		pass2 = 1;
 	}
@@ -156,7 +156,7 @@ void studentMenu() {
 		if (strcmp(studentDetails[ID][7], "Y") == 0)//semester 3
 			printf("Semester 3 start: %s %s\nSemester 3 end: %s %s\n-----------------------------------------\n", studSem3Sub[ID][6], studSem3Sub[ID][7], studSem3Sub[ID][8], studSem3Sub[ID][9]);
 		else printf("Semester 3 start: No record!\nSemester 3 end: No record!\n");
-		printf("Semester 2 subjects taken: ");
+		printf("Semester 3 subjects taken: ");
 		if (strcmp(studentDetails[ID][4], "Y") == 0) {
 			for (i = 0;i < studSem3GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem3Sub[ID][i], studSem3GPA[ID][i]);
 			printf("\n-----------------------------------------\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n----------------------------------------------------------------------------------\n", studSem3GPA[ID][14], studSem3GPA[ID][12], studSem3GPA[ID][13]);
@@ -313,10 +313,13 @@ void adminMenu() {
 							scanf("%d", &semSelect);
 						}//check user input validity
 						subjectLoop = 0;
+						system("cls");
+						printf("List of grades and GPA >>>>>>\nA :4.00\nA-:3.75\nB+:3.50\nB :3.00\nB-:2.75\nC+:2.50\nC :2.00\nF :0.00\n-------------------------------------------\n");
 						switch (semSelect) {
 						case 1:
+							studSem1GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
-							system("cls");
+							printf("You have selected Semester 1.\n");
 							printf("Enter number of courses:");
 							scanf("%d", &subjectLoop);
 							while (subjectLoop > 6 || subjectLoop < 1) {
@@ -385,7 +388,9 @@ void adminMenu() {
 							calcCGPA(1,subjectLoop,ID);
 							break;
 						case 2:
+							studSem2GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
+							printf("You have selected Semester 2.\n");
 							printf("Enter number of courses:");
 							scanf("%d", &subjectLoop);
 							while (subjectLoop > 6 || subjectLoop < 0) {
@@ -447,12 +452,15 @@ void adminMenu() {
 										scanf("%2s", grade);
 									}
 								}
+								printf("-------------------------------------------\n");
 							}
 							strcpy(studentDetails[ID][3], "Y");
 							calcCGPA(2, subjectLoop, ID);
 							break;
 						case 3:
+							studSem3GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
+							printf("You have selected Semester 3.\n");
 							printf("Enter number of courses:");
 							scanf("%d", &subjectLoop);
 							while (subjectLoop > 6 || subjectLoop < 0) {
@@ -514,8 +522,9 @@ void adminMenu() {
 										scanf("%2s", grade);
 									}
 								}
+								printf("-------------------------------------------\n");
 							}
-							printf("\n\nCourse code and grade obtained successfully!\n");
+							printf("Course code and grade obtained successfully!\n\n");
 							strcpy(studentDetails[ID][4], "Y");
 							calcCGPA(3, subjectLoop, ID);
 						}
