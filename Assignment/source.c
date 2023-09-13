@@ -12,10 +12,10 @@
 #define C 2.0 
 #define F 0.0
 
-int menuSelect=0,loginSelect=0,pass1,pass2,pass3,accID,attempt;
+int pass1,pass2,pass3,accID,attempt;
 char PIN[8], studentDetails[][8][61] = {{"KPKL1234","idk","Y","Y","Y","Y","Y","Y"},{""}}/*ID, name,subject entry (3 semesters), session entry (3 semesters)*/, studSem1Sub[][10][15] = {{"AAA1003","AAA1014","AAA1013","AAA1024","AAA1024","AAA1052","July","2023","October","2023"}}, studSem2Sub[][10][15] = {{"AAA1103","AAA1114","AAA1113","","","","November","2023","January","2024"}}, studSem3Sub[][10][15] = {{"AAA1203","AAA1214","AAA1213","AAA1224","AAA1224","AAA1252","February","2024","June","2024"}};//course codes(0-5), sem start(6/7), sem end(8/9)
 char* PINcheck[] = {"234567","123456","234565"};
-float studSem1GPA[][15]={{4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6}}, studSem2GPA[][15] = { {4.0,4.0,4.0,0,0,0,3,4,3,0,0,0,10,4.0,3} }, studSem3GPA[][15] = { {4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6} };//gpa for respective course(0-5),sem credit hours(6-11),total credit hours(12),cgpa(13),number of subjects(14)
+float studSem1GPA[][15]={{4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6}}, studSem2GPA[][15] = { {4.0,4.0,4.0,0,0,0,3,4,3,0,0,0,10,4.0,3} }, studSem3GPA[][15] = { {4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6} }, loginSelect = 0, menuSelect = 0;//gpa for respective course(0-5),sem credit hours(6-11),total credit hours(12),cgpa(13),number of subjects(14)
 void menu() {
 	int i;//counter
 	for (i = 1;i <= 148;i++) {
@@ -34,7 +34,7 @@ void menu() {
 	printf("\n1.CGPA System\n2.CGPA Target Calculator\n0.Exit\n");
 	//above prints out menu interface and options
 	do { //do loop
-		scanf("%d", &menuSelect);
+		scanf("%f", &menuSelect);
 		rewind(stdin);//while this is only required for [^\n] in theory, rewind is useful here if user inputs chars or strings
 		if (menuSelect != 2 && menuSelect != 1 && menuSelect!=0)
 			printf("Enter 0, 1 or 2 only!\n");//only displayed if user gives wrong input
@@ -95,12 +95,13 @@ void login() {
 	}
 	printf("\n1.Administrator Login\n2.Student Login\n");
 	//above prints out menu interface and options
-	scanf("%d", &loginSelect);
+	scanf("%f", &loginSelect);
 	while (loginSelect != 2 && loginSelect != 1) {//while loop
 		rewind(stdin);//refer to menu()
 		printf("Enter 1 or 2 only!\n");
-		scanf("%d", &loginSelect);
+		scanf("%f", &loginSelect);
 	}
+	rewind(stdin);
 }
 void getPW() {
 	printf("Enter PIN:");
