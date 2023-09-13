@@ -1093,8 +1093,10 @@ void main(){
 	int loop =1,studLoop=1;
 	while (loop ==1) {
 		attempt = 1;
+		menuSelect = 0;
 		menu();
 		if (menuSelect == 1) {
+			loginSelect = 0;
 			login();
 			if (loginSelect == 1) {//admin menu selected
 				pass1 = 0, pass2 = 0;
