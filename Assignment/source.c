@@ -107,10 +107,9 @@ void getPW() {
 	scanf("%7s", PIN);
 	rewind(stdin);
 	if (strcmp(PIN,PINcheck[accID])==0) {
-		printf("Access granted\n");
 		pass2 = 1;
 	}
-	else {printf("Wrong password\n");}
+	else {printf("Wrong password!\n");}
 }
 void studentMenu() {
 	int ID, loop = 1, loop2 = 1, i;
@@ -175,7 +174,7 @@ void studentMenu() {
 }
 void adminMenu() {
 	//above is to print admin menu, clears console
-	int select=0, i, loop = 1, loop2 = 1,loop3=1,loop4=1, menu2select=0, subjectLoop=0, ID,check, semSelect=0, gradeLoop = 1,sessionSelect=0,month=0,year=0;
+	int select, i, loop = 1, loop2 = 1,loop3=1,loop4=1, menu2select=0, subjectLoop=0, ID,check, semSelect=0, gradeLoop = 1,sessionSelect=0,month=0,year=0;
 	char IDcheck[10], grade[3],IDConfirm[10],stdName[61],nameConfirm[61];
 	float totalcgpa=0,wcgpa=0,totalcred=0;
 	while (loop == 1) {
@@ -187,6 +186,7 @@ void adminMenu() {
 		for (int i = 0; i < 50; i++) {
 			putchar('=');
 		}
+		select = -1;
 		printf("\n1.Add new student.\n2.Enter student course details.\n3.View students' CGPA and GPA score.\n0.Exit\n");//prints menu
 		scanf("%d", &select);
 		while (select < 0 || select >3) {
@@ -269,7 +269,7 @@ void adminMenu() {
 				rewind(stdin);
 			}//check name confirmation
 			printf("\nNew student added sucessfully!\n\nWould you like to continue editing student details? Enter 1 to continue, any other value to stop.");
-			scanf("%d", &loop);
+			if(scanf("%d", &loop)==0)loop=0;
 			rewind(stdin);
 			break;
 		case 2://enter course details
@@ -528,6 +528,8 @@ void adminMenu() {
 						}
 						break;
 					case 2:
+						month = 0, year = 0;
+						sessionSelect = 0;
 						printf("Enter edited semester (1,2 or 3):");
 						scanf("%d", &sessionSelect);
 						rewind(stdin);
@@ -892,7 +894,7 @@ void adminMenu() {
 						}
 					}
 					printf("Would you like to continue to edit this students' details? Type 1 to continue. Any other value to exit.");
-					scanf("%d", &loop3);
+					if (scanf("%d", &loop3) == 0)loop3 = 0;
 					rewind(stdin);
 				}
 			break;
