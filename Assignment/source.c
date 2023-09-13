@@ -112,9 +112,9 @@ void getPW() {
 	else {printf("Wrong password!\n");}
 }
 void studentMenu() {
-	int ID, loop = 1, loop2 = 1, i;
+	int ID, loop = 1, i;
 	char IDcheck[10];
-	float wcgpa = 0, totalcred = 0, totalcgpa = 0;
+	float wcgpa = 0, totalcred = 0, totalcgpa = 0,loop2=1;
 	system("cls");
 	while (loop == 1) {
 		printf("Enter student ID:");//enter ID and check if id is available
@@ -174,9 +174,9 @@ void studentMenu() {
 }
 void adminMenu() {
 	//above is to print admin menu, clears console
-	int select, i, loop = 1, loop2 = 1,loop3=1,loop4=1, menu2select=0, subjectLoop=0, ID,check, semSelect=0, gradeLoop = 1,sessionSelect=0,month=0,year=0;
+	int i, loop = 1, loop2 = 1,loop3=1, ID,check, gradeLoop = 1;
 	char IDcheck[10], grade[3],IDConfirm[10],stdName[61],nameConfirm[61];
-	float totalcgpa=0,wcgpa=0,totalcred=0;
+	float totalcgpa=0,wcgpa=0,totalcred=0,select,menu2select=0,subjectLoop = 0, semSelect = 0,sessionSelect = 0, month = 0, year = 0;
 	while (loop == 1) {
 		system("cls");
 		for (int i = 0; i < 50; i++) {
@@ -188,13 +188,13 @@ void adminMenu() {
 		}
 		select = -1;
 		printf("\n1.Add new student.\n2.Enter student course details.\n3.View students' CGPA and GPA score.\n0.Exit\n");//prints menu
-		scanf("%d", &select);
-		while (select < 0 || select >3) {
+		scanf("%f", &select);
+		while (select != 0 && select !=1&&select!=2&&select!=3) {
 			rewind(stdin);
 			printf("Enter a value between 0 to 3!");
-			scanf("%d", &select);
+			scanf("%f", &select);
 		}//checks input
-		switch (select) {
+		switch ((int)select) {
 		case 0:
 			loop = 0;
 			break;//exit
@@ -269,7 +269,7 @@ void adminMenu() {
 				rewind(stdin);
 			}//check name confirmation
 			printf("\nNew student added sucessfully!\n\nWould you like to continue editing student details? Enter 1 to continue, any other value to stop.");
-			if(scanf("%d", &loop)==0)loop=0;
+			if(scanf("%f", &loop)==0)loop=0;
 			rewind(stdin);
 			break;
 		case 2://enter course details
@@ -296,37 +296,38 @@ void adminMenu() {
 					}//print menu
 					menu2select = -1;//reset parameters
 					printf("\nYou are now editing %s, %s's details\n1.Enter course code and grade obtained.\n2.Enter current semester session.\n0.Exit\n", studentDetails[ID][0], studentDetails[ID][1]);
-					scanf("%d", &menu2select);
+					scanf("%f", &menu2select);
 					while (menu2select != 1 && menu2select != 2 && menu2select!=0) {
 						rewind(stdin);
 						printf("Enter a value between 0 to 2!\n");
-						scanf("%d", &menu2select);
+						scanf("%f", &menu2select);
 					}//check user input validity
-					switch (menu2select) {
+					switch ((int)menu2select) {
 					case 0:break;
 					case 1://input course details
 						semSelect = 0;
 						printf("Enter edited semester (1,2 or 3):");
-						scanf("%d", &semSelect);
-						while (semSelect < 1 || semSelect>3) {
+						scanf("%f", &semSelect);
+						while (semSelect !=1 && semSelect!=2&&semSelect!=3) {
 							rewind(stdin);
 							printf("Enter 1,2 or 3 only!\n");
-							scanf("%d", &semSelect);
+							scanf("%f", &semSelect);
 						}//check user input validity
 						subjectLoop = 0;
 						system("cls");
 						printf("List of grades and GPA >>>>>>\nA :4.00\nA-:3.75\nB+:3.50\nB :3.00\nB-:2.75\nC+:2.50\nC :2.00\nF :0.00\n-------------------------------------------\n");
-						switch (semSelect) {
+						switch ((int)semSelect) {
 						case 1:
 							studSem1GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
 							printf("You have selected Semester 1.\nEnter number of courses:");
-							scanf("%d", &subjectLoop);
-							while (subjectLoop > 6 || subjectLoop < 1) {
+							scanf("%f", &subjectLoop);
+							while (subjectLoop != 1&& subjectLoop != 2 && subjectLoop != 3 && subjectLoop != 4 && subjectLoop != 5 && subjectLoop != 6) {
 								rewind(stdin);
 								printf("Enter a number between 1 to 6!");
-								scanf("%d", &subjectLoop);
+								scanf("%f", &subjectLoop);
 							}//check user input validity
+							rewind(stdin);
 							studSem1GPA[ID][14] = subjectLoop;
 							for (int n = 0;n < subjectLoop;n++) {
 								printf("Enter course code for subject %d:", n + 1);
@@ -391,11 +392,11 @@ void adminMenu() {
 							studSem2GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
 							printf("You have selected Semester 2.\nEnter number of courses:");
-							scanf("%d", &subjectLoop);
-							while (subjectLoop > 6 || subjectLoop < 0) {
+							scanf("%f", &subjectLoop);
+							while (subjectLoop != 1 && subjectLoop != 2 && subjectLoop != 3 && subjectLoop != 4 && subjectLoop != 5 && subjectLoop != 6) {
 								rewind(stdin);
 								printf("Enter a number between 1 to 6!");
-								scanf("%d", &subjectLoop);
+								scanf("%f", &subjectLoop);
 							}
 							studSem2GPA[ID][14] = subjectLoop;
 							for (int n = 0;n < subjectLoop;n++) {
@@ -460,11 +461,11 @@ void adminMenu() {
 							studSem3GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
 							printf("You have selected Semester 3.\nEnter the number of courses:");
-							scanf("%d", &subjectLoop);
-							while (subjectLoop > 6 || subjectLoop < 0) {
+							scanf("%f", &subjectLoop);
+							while (subjectLoop != 1 && subjectLoop != 2 && subjectLoop != 3 && subjectLoop != 4 && subjectLoop != 5 && subjectLoop != 6) {
 								rewind(stdin);
 								printf("Enter a number between 1 to 6!");
-								scanf("%d", &subjectLoop);
+								scanf("%f", &subjectLoop);
 							}
 							studSem3GPA[ID][14] = subjectLoop;
 							for (int n = 0;n < subjectLoop;n++) {
@@ -528,26 +529,26 @@ void adminMenu() {
 						}
 						break;
 					case 2:
-						month = 0, year = 0;
+						month = 0, year = 0;//reset value
 						sessionSelect = 0;
 						printf("Enter edited semester (1,2 or 3):");
-						scanf("%d", &sessionSelect);
+						scanf("%f", &sessionSelect);
 						rewind(stdin);
-						while (sessionSelect < 1 || sessionSelect>3) {
+						while (sessionSelect != 1 && sessionSelect!=2 && sessionSelect!=3) {
 							rewind(stdin);
 							printf("Enter 1,2 or 3 only!\n");
-							scanf("%d", &sessionSelect);
+							scanf("%f", &sessionSelect);
 						}//check user input validity
 						if (sessionSelect == 1) {
 							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
-							scanf("%d",&month);
+							scanf("%f",&month);
 							rewind(stdin);
-							while (month < 1 || month>12) {
+							while (month < 1 || month>12 || ((int)month) - month != 0) {
 								printf("Enter a valid month! Starting month:");
-								scanf("%d", &month);
+								scanf("%f", &month);
 								rewind(stdin);
 							}
-							switch (month) {
+							switch ((int)month) {
 							case 1:
 								strcpy(studSem1Sub[ID][6], "January");
 								break;
@@ -585,26 +586,25 @@ void adminMenu() {
 								strcpy(studSem1Sub[ID][6], "December");
 								break;
 							}
-							month = 0;//reset value
 							printf("Enter starting year (e.g 2023):");
-							scanf("%d", &year);
+							scanf("%f", &year);
 							rewind(stdin);
-							while (year < 2000 || year>2100) {
-								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter starting year:");
-								scanf("%d", &year);
+							while (year < 2000 || year>2100||((int)year)-year!=0) {
+								printf("Invalid year! Only integer values of 2000~2100 are supported!\nEnter starting year:");
+								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa(year, studSem1Sub[ID][7],10);
-							year = 0;//reset value
+							itoa((int)year, studSem1Sub[ID][7],10);
+							month = 0, year = 0;//reset value
 							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
-							scanf("%d", &month);
+							scanf("%f", &month);
 							rewind(stdin);
-							while (month < 1 || month>12) {
+							while (month < 1 || month>12 || ((int)month) - month != 0) {
 								printf("Enter a valid month! Ending month:");
-								scanf("%d", &month);
+								scanf("%f", &month);
 								rewind(stdin);
 							}
-							switch (month) {
+							switch ((int)month) {
 							case 1:
 								strcpy(studSem1Sub[ID][8], "January");
 								break;
@@ -642,30 +642,29 @@ void adminMenu() {
 								strcpy(studSem1Sub[ID][8], "December");
 								break;
 							}
-							month = 0;//reset value
 							printf("Enter ending year (e.g 2023):");
-							scanf("%d", &year);
+							scanf("%f", &year);
 							rewind(stdin);
-							while (year < 2000 || year>2100) {
+							while (year < 2000 || year>2100 || ((int)year) - year != 0) {
 								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter ending year:");
-								scanf("%d", &year);
+								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa(year, studSem1Sub[ID][9], 10);
-							year = 0;//reset value
+							itoa((int)year, studSem1Sub[ID][9], 10);
+							month = 0, year = 0;//reset value
 							printf("\n\nSemester 1 session date added sucessfully!\n\n");
 							strcpy(studentDetails[ID][5], "Y");
 						}
 						else if (sessionSelect == 2) {
 							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
-							scanf("%d", &month);
+							scanf("%f", &month);
 							rewind(stdin);
-							while (month < 1 || month>12) {
+							while (month < 1 || month>12 || ((int)month) - month != 0) {
 								printf("Enter a valid month! Starting month:");
-								scanf("%d", &month);
+								scanf("%f", &month);
 								rewind(stdin);
 							}
-							switch (month) {
+							switch ((int)month) {
 							case 1:
 								strcpy(studSem2Sub[ID][6], "January");
 								break;
@@ -705,24 +704,24 @@ void adminMenu() {
 							}
 							month = 0;//reset value
 							printf("Enter starting year (e.g 2023):");
-							scanf("%d", &year);
+							scanf("%f", &year);
 							rewind(stdin);
-							while (year < 2000 || year>2100) {
-								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter starting year:");
-								scanf("%d", &year);
+							while (year < 2000 || year>2100 || ((int)year) - year != 0) {
+								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter ending year:");
+								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa(year, studSem2Sub[ID][7], 10);
-							year = 0;//reset value
+							itoa((int)year, studSem1Sub[ID][9], 10);
+							month = 0, year = 0;//reset value
 							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
-							scanf("%d", &month);
+							scanf("%f", &month);
 							rewind(stdin);
-							while (month < 1 || month>12) {
+							while (month < 1 || month>12||((int)month)-month!=0) {
 								printf("Enter a valid month! Ending month:");
-								scanf("%d", &month);
+								scanf("%f", &month);
 								rewind(stdin);
 							}
-							switch (month) {
+							switch ((int)month) {
 							case 1:
 								strcpy(studSem2Sub[ID][8], "January");
 								break;
@@ -762,28 +761,28 @@ void adminMenu() {
 							}
 							month = 0;//reset value
 							printf("Enter ending year (e.g 2023):");
-							scanf("%d", &year);
+							scanf("%f", &year);
 							rewind(stdin);
-							while (year < 2000 || year>2100) {
+							while (year < 2000 || year>2100 || ((int)year) - year != 0) {
 								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter ending year:");
-								scanf("%d", &year);
+								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa(year, studSem2Sub[ID][9], 10);
-							year = 0;//reset value
+							itoa((int)year, studSem1Sub[ID][9], 10);
+							month = 0, year = 0;//reset value
 							printf("\n\nSemester 2 session date added sucessfully!\n\n");
 							strcpy(studentDetails[ID][6], "Y");
 						}
 						else if (sessionSelect == 3) {
 							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
-							scanf("%d", &month);
+							scanf("%f", &month);
 							rewind(stdin);
-							while (month < 1 || month>12) {
+							while (month < 1 || month>12 || ((int)month) - month != 0) {
 								printf("Enter a valid month! Starting month:");
-								scanf("%d", &month);
+								scanf("%f", &month);
 								rewind(stdin);
 							}
-							switch (month) {
+							switch ((int)month) {
 							case 1:
 								strcpy(studSem3Sub[ID][6], "January");
 								break;
@@ -821,26 +820,25 @@ void adminMenu() {
 								strcpy(studSem3Sub[ID][6], "December");
 								break;
 							}
-							month = 0;//reset value
 							printf("Enter starting year (e.g 2023):");
-							scanf("%d", &year);
+							scanf("%f", &year);
 							rewind(stdin);
-							while (year < 2000 || year>2100) {
-								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter starting year:");
-								scanf("%d", &year);
+							while (year < 2000 || year>2100 || ((int)year) - year != 0) {
+								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter ending year:");
+								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa(year, studSem3Sub[ID][7], 10);
-							year = 0;//reset value
+							itoa((int)year, studSem1Sub[ID][9], 10);
+							month=0, year = 0;//reset value
 							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
-							scanf("%d", &month);
+							scanf("%f", &month);
 							rewind(stdin);
-							while (month < 1 || month>12) {
+							while (month < 1 || month>12 || ((int)month) - month != 0) {
 								printf("Enter a valid month! Ending month:");
-								scanf("%d", &month);
+								scanf("%f", &month);
 								rewind(stdin);
 							}
-							switch (month) {
+							switch ((int)month) {
 							case 1:
 								strcpy(studSem3Sub[ID][8], "January");
 								break;
@@ -878,23 +876,22 @@ void adminMenu() {
 								strcpy(studSem3Sub[ID][8], "December");
 								break;
 							}
-							month = 0;//reset value
 							printf("Enter ending year (e.g 2023):");
-							scanf("%d", &year);
+							scanf("%f", &year);
 							rewind(stdin);
-							while (year < 2000 || year>2100) {
+							while (year < 2000 || year>2100 || ((int)year) - year != 0) {
 								printf("Invalid year! Only values of 2000~2100 are supported!\nEnter ending year:");
-								scanf("%d", &year);
+								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa(year, studSem3Sub[ID][9], 10);
-							year = 0;//reset value
+							itoa((int)year, studSem1Sub[ID][9], 10);
+							month = 0, year = 0;//reset value
 							printf("\n\nSemester 3 session date added sucessfully!\n\n");
 							strcpy(studentDetails[ID][7], "Y");
 						}
 					}
 					printf("Would you like to continue to edit this students' details? Type 1 to continue. Any other value to exit.");
-					if (scanf("%d", &loop3) == 0)loop3 = 0;
+					if (scanf("%f", &loop3) == 0)loop3 = 0;
 					rewind(stdin);
 				}
 			break;
@@ -930,15 +927,15 @@ int calcCGPA(sem,sub,ID) {
 	return 0;
 }
 void targetCalc() {
-	int i, select=0,mpuCred=0,nCred=0,loop=1,loop2=1,ID,perk,merit=0,futurePerk;//nCred=normal total credit hours
+	int i,mpuCred=0,nCred=0,loop=1,ID,perk,merit=0,futurePerk;//nCred=normal total credit hours
 	char IDcheck[10],meritPercent[5];
-	float lastCGPA=0,tMPUGPA=0,tnGPA=0,tCGPA;//tnGPA=target normal GPA
+	float lastCGPA=0,tMPUGPA=0,tnGPA=0,tCGPA,select=0;//tnGPA=target normal GPA
 	system("cls");
 	for (i = 0; i < 50; i++) putchar('=');
 	printf("\n%41s\n", "WELCOME TO CGPA TARGET CALCULATOR");
 	for (i = 0; i < 50; i++) putchar('=');
 	printf("\nMaking your college life easier!\n1.Import CGPA from existing student ID\n2.Manually input last semester's CGPA\n");
-	while (scanf("%d", &select) == 0 || select != 1 && select != 2) {
+	while (scanf("%f", &select) == 0 || select != 1 && select != 2) {
 		rewind(stdin);
 		printf("Invalid input! Enter 1 or 2 only!\n");
 	}
@@ -1090,7 +1087,7 @@ void targetCalc() {
 	printf("\n------------------------------------------------------------------------------------\n\nThank you for using this calculator!\n");
 }
 void main(){
-	int loop =1,studLoop=1;
+	float loop =1;
 	while (loop ==1) {
 		attempt = 1;
 		menuSelect = -1;
@@ -1116,7 +1113,7 @@ void main(){
 		else if (menuSelect == 2) targetCalc();
 		else if (menuSelect == 0) exit(1);
 		printf("\nWould you like to continue? Type 1 to continue; any other value to exit.\n");
-		if (scanf("%d", &loop) == 0)loop = 0;//runs if user inputs non-int value, regards it as exit loop;
+		if (scanf("%f", &loop) == 0)loop = 0;//runs if user inputs non-int value, regards it as exit loop;
 		rewind(stdin);
 		system("cls");//clears console
 	}
