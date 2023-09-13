@@ -168,7 +168,7 @@ void studentMenu() {
 		else totalcgpa = 0;
 		if(strcmp(studentDetails[ID][2], "Y") != 0&&strcmp(studentDetails[ID][3], "Y") != 0&&strcmp(studentDetails[ID][4], "Y") != 0) printf("CGPA across 3 semesters: No record found!\n----------------------------------------------------------------------------------\n");
 		else printf("CGPA across 3 semesters:%.2f\n----------------------------------------------------------------------------------\n",totalcgpa);
-		printf("\nDo you want to continue to view student details? Enter 1 to continue.");
+		printf("\nDo you want to continue to view student details? Enter 1 to continue, any other value to exit.");
 		if (scanf("%d", &loop2) == 0)loop2 = 0;//runs if user inputs non-int value, regards it as exit loop
 		rewind(stdin);
 	}
@@ -188,7 +188,7 @@ void adminMenu() {
 			putchar('=');
 		}
 		select = -1;
-		printf("\n1.Add new student.\n2.Enter student course details.\n3.View students' CGPA and GPA score.\n0.Exit\n");//prints menu
+		printf("\n1.Add new student.\n2.Enter student course details.\n3.View students' CGPA and GPA score.\n0.Exit admin menu and return to main menu\n");//prints menu
 		scanf("%f", &select);
 		while (select != 0 && select !=1&&select!=2&&select!=3) {
 			rewind(stdin);
@@ -269,7 +269,7 @@ void adminMenu() {
 				scanf("%60[^\n]", nameConfirm);
 				rewind(stdin);
 			}//check name confirmation
-			printf("\nNew student added sucessfully!\n\nWould you like to continue editing student details? Enter 1 to continue, any other value to stop.");
+			printf("\nNew student added sucessfully!\n\nWould you like to continue editing student details? Enter 1 to continue, any other value to stop and return to admin menu.");
 			if(scanf("%f", &loop)==0)loop=0;
 			rewind(stdin);
 			break;
@@ -305,7 +305,7 @@ void adminMenu() {
 					}//check user input validity
 					switch ((int)menu2select) {
 					case 0:break;
-					case 1://input course details
+					case 1://input course code and grade
 						semSelect = 0;
 						printf("Enter edited semester (1,2 or 3):");
 						scanf("%f", &semSelect);
@@ -891,7 +891,7 @@ void adminMenu() {
 							strcpy(studentDetails[ID][7], "Y");
 						}
 					}
-					printf("Would you like to continue to edit this students' details? Type 1 to continue. Any other value to exit.");
+					printf("Would you like to continue to edit this students' details? Type 1 to continue. Any other value to exit and return to admin menu.");
 					if (scanf("%f", &loop3) == 0)loop3 = 0;
 					rewind(stdin);
 				}
@@ -1113,9 +1113,10 @@ void main(){
 		}
 		else if (menuSelect == 2) targetCalc();
 		else if (menuSelect == 0) exit(1);
-		printf("\nWould you like to continue? Type 1 to continue; any other value to exit.\n");
+		printf("\nWould you like to continue using this program? Type 1 to continue; any other value to exit.\n");
 		if (scanf("%f", &loop) == 0)loop = 0;//runs if user inputs non-int value, regards it as exit loop;
 		rewind(stdin);
 		system("cls");//clears console
 	}
+	if (loop != 1)exit(0);
 }
