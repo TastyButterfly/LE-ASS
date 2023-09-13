@@ -31,14 +31,14 @@ void menu() {
 	for (i = 0; i < 50; i++) putchar('=');
 	printf("\n%26s\n", "MENU");
 	for (i = 0; i < 50; i++) putchar('=');
-	printf("\n1.CGPA System\n2.CGPA Target Calculator\n");
+	printf("\n1.CGPA System\n2.CGPA Target Calculator\n0.Exit\n");
 	//above prints out menu interface and options
 	do { //do loop
 		scanf("%d", &menuSelect);
 		rewind(stdin);//while this is only required for [^\n] in theory, rewind is useful here if user inputs chars or strings
-		if (menuSelect != 2 && menuSelect != 1)
-			printf("Enter 1 or 2 only!\n");//only displayed if user gives wrong input
-	} while (menuSelect != 2 && menuSelect != 1);//if user does not input given options, they are asked to input again
+		if (menuSelect != 2 && menuSelect != 1 && menuSelect!=0)
+			printf("Enter 0, 1 or 2 only!\n");//only displayed if user gives wrong input
+	} while (menuSelect != 2 && menuSelect != 1&& menuSelect!=0);//if user does not input given options, they are asked to input again
 }
 void getAID() {
 	char AID[11], IDcheck[10];
@@ -294,7 +294,7 @@ void adminMenu() {
 					for (int i = 0; i < 50; i++) {
 						putchar('=');
 					}//print menu
-					menu2select = 0;//reset parameters
+					menu2select = -1;//reset parameters
 					printf("\nYou are now editing %s, %s's details\n1.Enter course code and grade obtained.\n2.Enter current semester session.\n0.Exit\n", studentDetails[ID][0], studentDetails[ID][1]);
 					scanf("%d", &menu2select);
 					while (menu2select != 1 && menu2select != 2 && menu2select!=0) {
@@ -1093,27 +1093,28 @@ void main(){
 	int loop =1,studLoop=1;
 	while (loop ==1) {
 		attempt = 1;
-		menuSelect = 0;
+		menuSelect = -1;
 		menu();
 		if (menuSelect == 1) {
 			loginSelect = 0;
 			login();
 			if (loginSelect == 1) {//admin menu selected
 				pass1 = 0, pass2 = 0;
-				while (pass1 == 0) { 
+				while (pass1 == 0) {
 					accID = 1;
 					getAID();//get admin id
 				}
 				while (pass1 == 1 && pass2 == 0) {
 					getPW();//get admin password
 				}
-				if(pass1 == 1 && pass2 == 1) { adminMenu();}//if admin password and id is correct
+				if (pass1 == 1 && pass2 == 1) { adminMenu(); }//if admin password and id is correct
 			}
 			if (loginSelect == 2) {//student details selected
 				studentMenu();
 			}
 		}
-		else if (menuSelect == 2) { targetCalc(); }
+		else if (menuSelect == 2) targetCalc();
+		else if (menuSelect == 0) exit(1);
 		printf("\nWould you like to continue? Type 1 to continue; any other value to exit.\n");
 		if (scanf("%d", &loop) == 0)loop = 0;//runs if user inputs non-int value, regards it as exit loop;
 		rewind(stdin);
