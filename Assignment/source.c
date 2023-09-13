@@ -175,16 +175,16 @@ void studentMenu() {
 }
 void adminMenu() {
 	//above is to print admin menu, clears console
-	int i, loop = 1, loop2 = 1,loop3=1, ID,check, gradeLoop = 1;
+	int i,n, loop2 = 1, ID,check, gradeLoop = 1;//i is for menu counter, n is for function counter
 	char IDcheck[10], grade[3],IDConfirm[10],nameConfirm[61];
-	float totalcgpa=0,wcgpa=0,totalcred=0,select,menu2select=0,subjectLoop = 0, semSelect = 0,sessionSelect = 0, month = 0, year = 0;
+	float totalcgpa=0,wcgpa=0,totalcred=0,select,menu2select=0,subjectLoop = 0, semSelect = 0,sessionSelect = 0, month = 0, year = 0,loop=1,loop3=1;
 	while (loop == 1) {
 		system("cls");
-		for (int i = 0; i < 50; i++) {
+		for (i = 0; i < 50; i++) {
 			putchar('=');
 		}
 		printf("\n%30s\n", "ADMIN MENU");
-		for (int i = 0; i < 50; i++) {
+		for (i = 0; i < 50; i++) {
 			putchar('=');
 		}
 		select = -1;
@@ -288,11 +288,11 @@ void adminMenu() {
 			}
 				while (loop3 == 1) {//if id is found in system:
 					system("cls");
-					for (int i = 0; i < 50; i++) {
+					for (i = 0; i < 50; i++) {
 						putchar('=');
 					}
 					printf("\n%33s\n", "DETAILS EDITOR");
-					for (int i = 0; i < 50; i++) {
+					for (i = 0; i < 50; i++) {
 						putchar('=');
 					}//print menu
 					menu2select = -1;//reset parameters
@@ -330,7 +330,7 @@ void adminMenu() {
 							}//check user input validity
 							rewind(stdin);
 							studSem1GPA[ID][14] = subjectLoop;
-							for (int n = 0;n < subjectLoop;n++) {
+							for (n = 0;n < subjectLoop;n++) {
 								printf("Enter course code for subject %d:", n + 1);
 								scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
 								rewind(stdin);
@@ -400,7 +400,7 @@ void adminMenu() {
 								scanf("%f", &subjectLoop);
 							}
 							studSem2GPA[ID][14] = subjectLoop;
-							for (int n = 0;n < subjectLoop;n++) {
+							for (n = 0;n < subjectLoop;n++) {
 								printf("Enter course code for subject %d: ", n + 1);
 								scanf("%7s", studSem2Sub[ID][n]);//reads until 7 chars only
 								rewind(stdin);
