@@ -133,7 +133,7 @@ void studentMenu() {
 		printf("Name:%s\n----------------------------------------------------------------------------------\n", studentDetails[ID][1]);
 		if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1
 			printf("Semester 1 start: %s %s\nSemester 1 end: %s %s\n-----------------------------------------\n", studSem1Sub[ID][6], studSem1Sub[ID][7], studSem1Sub[ID][8], studSem1Sub[ID][9]);
-		else printf("Semester 1 start: No record!\nSemester 1 end: No record!\n-----------------------------------------\n");
+		else printf("Semester 1 start: No record found!\nSemester 1 end: No record found!\n-----------------------------------------\n");
 		printf("Semester 1 subjects taken: ");
 		if (strcmp(studentDetails[ID][2], "Y") == 0) {
 			for (i = 0;i < studSem1GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem1Sub[ID][i], studSem1GPA[ID][i]);
@@ -144,7 +144,7 @@ void studentMenu() {
 		else printf("No record found!\n----------------------------------------------------------------------------------\n");
 		if (strcmp(studentDetails[ID][6], "Y") == 0)//semester 2
 			printf("Semester 2 start: %s %s\nSemester 2 end: %s %s\n-----------------------------------------\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
-		else printf("Semester 2 start: No record!\nSemester 2 end: No record!\n");
+		else printf("Semester 2 start: No record found!\nSemester 2 end: No record found!\n");
 		printf("Semester 2 subjects taken: ");
 		if (strcmp(studentDetails[ID][3], "Y") == 0) {
 			for (i = 0;i < studSem2GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem2Sub[ID][i], studSem2GPA[ID][i]);
@@ -155,7 +155,7 @@ void studentMenu() {
 		else printf("No record found!\n----------------------------------------------------------------------------------\n");
 		if (strcmp(studentDetails[ID][7], "Y") == 0)//semester 3
 			printf("Semester 3 start: %s %s\nSemester 3 end: %s %s\n-----------------------------------------\n", studSem3Sub[ID][6], studSem3Sub[ID][7], studSem3Sub[ID][8], studSem3Sub[ID][9]);
-		else printf("Semester 3 start: No record!\nSemester 3 end: No record!\n");
+		else printf("Semester 3 start: No record found!\nSemester 3 end: No record found!\n");
 		printf("Semester 3 subjects taken: ");
 		if (strcmp(studentDetails[ID][4], "Y") == 0) {
 			for (i = 0;i < studSem3GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem3Sub[ID][i], studSem3GPA[ID][i]);
@@ -166,7 +166,8 @@ void studentMenu() {
 		else printf("No record found!\n----------------------------------------------------------------------------------\n");
 		if (totalcred != 0)totalcgpa = wcgpa / totalcred;
 		else totalcgpa = 0;
-		printf("CGPA across 3 semesters:%.2f\n----------------------------------------------------------------------------------\n", totalcgpa);
+		if(strcmp(studentDetails[ID][2], "Y") != 0&&strcmp(studentDetails[ID][3], "Y") != 0&&strcmp(studentDetails[ID][4], "Y") != 0) printf("CGPA across 3 semesters: No record found!\n----------------------------------------------------------------------------------\n");
+		else printf("CGPA across 3 semesters:%.2f\n----------------------------------------------------------------------------------\n",totalcgpa);
 		printf("\nDo you want to continue to view student details? Enter 1 to continue.");
 		if (scanf("%d", &loop2) == 0)loop2 = 0;//runs if user inputs non-int value, regards it as exit loop
 		rewind(stdin);
@@ -1000,7 +1001,7 @@ void targetCalc() {
 	system("cls");
 	tCGPA =(ceil(lastCGPA * 10) / 10)+0.1;
 	if (tCGPA > 4)tCGPA = 4;//ensure target CGPA does not exceed 4.0 as it is not possible
-	tnGPA = (float)tCGPA*(mpuCred+nCred)/(mpuCred+nCred+0.5);
+	tnGPA = (float)(tCGPA*(mpuCred+nCred)-(0.5*mpuCred))/(mpuCred+nCred);
 	tMPUGPA = tnGPA + 0.5;
 	if (tnGPA < 2) {
 		tnGPA = 2;
