@@ -176,7 +176,7 @@ void studentMenu() {
 void adminMenu() {
 	//above is to print admin menu, clears console
 	int i, loop = 1, loop2 = 1,loop3=1, ID,check, gradeLoop = 1;
-	char IDcheck[10], grade[3],IDConfirm[10],stdName[61],nameConfirm[61];
+	char IDcheck[10], grade[3],IDConfirm[10],nameConfirm[61];
 	float totalcgpa=0,wcgpa=0,totalcred=0,select,menu2select=0,subjectLoop = 0, semSelect = 0,sessionSelect = 0, month = 0, year = 0;
 	while (loop == 1) {
 		system("cls");
