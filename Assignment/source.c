@@ -927,8 +927,8 @@ int calcCGPA(sem,sub,ID) {
 	return 0;
 }
 void targetCalc() {
-	int i, select=0,mpuCred=0,nCred=0,loop=1,loop2=1,ID;//nCred=normal total credit hours
-	char IDcheck[10];
+	int i, select=0,mpuCred=0,nCred=0,loop=1,loop2=1,ID,perk,merit=0,futurePerk;//nCred=normal total credit hours
+	char IDcheck[10],meritPercent[5];
 	float lastCGPA=0,tMPUGPA=0,tnGPA=0,tCGPA;//tnGPA=target normal GPA
 	system("cls");
 	for (i = 0; i < 50; i++) putchar('=');
@@ -970,7 +970,7 @@ void targetCalc() {
 			select = 2;
 		}
 	}
-	if (select == 2) {//else if is not used here as the user may be directed here even though they selected 1 (refer to the else clause)
+	if (select == 2) {//else if is not used here as the user may be directed here even though they selected 1 (refer to line 968's else clause)
 		printf("\nEnter your last semester's CGPA:");
 		while (scanf("%5f", &lastCGPA) == 0 || lastCGPA < 0 || lastCGPA>4) {
 			rewind(stdin);
@@ -979,23 +979,112 @@ void targetCalc() {
 		lastCGPA = round(lastCGPA * 100) / 100;
 		rewind(stdin);
 	}
-	printf("\nEnter the total credit hours for MPU subjects:");
+	printf("\n%-72s:","Enter the total credit hours for MPU subjects for your next semester");
 	while (scanf("%d", &mpuCred) == 0 || mpuCred< 0) {
 		rewind(stdin);
-		printf("Enter a valid positive integer!\n\nEnter the total credit hours for MPU subjects:");
+		printf("Enter a valid positive integer!\n\nEnter the total credit hours for MPU subjects for your next semester:");
 	}
 	rewind(stdin);
-	printf("\n\nEnter the total credit hours for non-MPU subjects:");
+	printf("\n%-72s:","Enter the total credit hours for non-MPU subjects for your next semester");
 	while (scanf("%d", &nCred) == 0 || nCred < 0) {
 		rewind(stdin);
-		printf("Enter a valid positive integer!\n\nEnter the total credit hours for non-MPU subjects:");
+		printf("Enter a valid positive integer!\n\nEnter the total credit hours for non-MPU subjects for your next semester:");
+	}
+	rewind(stdin);
+	printf("\nEnter your current merit scholarship status:\n1. 100%%\n2. 50%%\n3. 25%%\n4. 20%%\n5. 15%%\n0. None.\n");
+	while (scanf("%d", &merit) == 0 || merit< 0||merit>5) {
+		rewind(stdin);
+		printf("Invalid value entered!\n\nEnter your current merit scholarship status:");
 	}
 	rewind(stdin);
 	system("cls");
 	tCGPA =(ceil(lastCGPA * 10) / 10)+0.1;
 	if (tCGPA > 4)tCGPA = 4;//ensure target CGPA does not exceed 4.0 as it is not possible
-	printf("Your last semester's CGPA (rounded to 2 d.p) is %.2f\nYour targeted CGPA is %.2f\n\n------------------------------------------\n",lastCGPA,tCGPA);
-	printf("\nThis area is off limits!\n");
+	tnGPA = (float)tCGPA*(mpuCred+nCred)/(mpuCred+nCred+0.5);
+	tMPUGPA = tnGPA + 0.5;
+	if (tnGPA < 2) {
+		tnGPA = 2;
+		tMPUGPA = 2.5;
+		tCGPA = (float)(nCred*tnGPA+mpuCred*tMPUGPA)/(nCred+mpuCred);//target CGPA recalculation
+	}
+	else if (tnGPA > 3.5) {
+		tnGPA = (float)(tCGPA * (mpuCred + nCred)-(4*mpuCred))/nCred;
+		if (tnGPA < 2) tnGPA = 2;
+		tMPUGPA = 4;
+		tCGPA = (float)(nCred * tnGPA + mpuCred * tMPUGPA) / (nCred + mpuCred);//target GPA recalculation
+	}
+	if (tCGPA < 3) perk = 0;
+	else if (tCGPA >= 3.0 && tCGPA < 3.25) {
+		if (merit != 0) perk = 1;
+		else perk = 0;
+	}
+	else if (tCGPA >= 3.25 && tCGPA < 3.5) {
+		if (merit == 2 || merit == 1)perk = 2;
+		else if (merit==0) perk = 0;
+		else perk = 1;
+	}
+	else if (tCGPA >= 3.5) {
+		if (merit == 1) perk = 3;
+		else if (merit == 2)perk = 2;
+		else if (merit != 0) perk = 1;
+		else perk = 0;
+	}
+	if (tCGPA >= 3.85) futurePerk = 3;
+	else if (tCGPA >= 3.75&& tCGPA<=3.85)futurePerk = 2;
+	else if (tCGPA >= 2.5&&tCGPA<=3.75) futurePerk = 1;
+	else futurePerk = 0;
+	switch (merit) {
+		case 0:
+			strcpy(meritPercent, "0%");
+			break;
+		case 1:
+			strcpy(meritPercent, "100%");
+			break;
+		case 2:
+			strcpy(meritPercent, "50%");
+			break;
+		case 3:
+			strcpy(meritPercent, "25%");
+			break;
+		case 4:
+			strcpy(meritPercent, "20%");
+			break;
+		case 5:
+			strcpy(meritPercent, "15%");
+	}
+	printf("Your last semester's CGPA (rounded to 2 d.p) is %.2f.\nYour targeted CGPA is %.2f.\n\n------------------------------------------------------------------------------------\n", lastCGPA, tCGPA);
+	printf("Your targeted GPA for non-MPU subjects: %.2f\nYour targeted GPA for MPU subjects: %.2f\n------------------------------------------------------------------------------------\n",tnGPA,tMPUGPA);
+	printf("A targeted CGPA of %.2f with a current merit scholarship of %s unlocks the following perks and benefits if the target is attained:\n",tCGPA,meritPercent);
+	switch (perk) {
+		case 0:
+			printf("> Pass in all courses, allows for continuation towards the next semester.\n> No merit scholarship.");
+			break;
+		case 1:
+			if(merit==4) printf("> Pass in all courses, allows for continuation towards the next semester.\n> Allows for the retainment of merit scholarship worth 20%%.");
+			else if (merit == 5) printf("> Pass in all courses, allows for continuation towards the next semester.\n> Allows for the retainment of merit scholarship worth 15%%.");
+			else printf("> Pass in all courses, allows for continuation towards the next semester.\n> Allows for the retainment of merit scholarship worth 25%%.");
+			break;
+		case 2:
+			printf("> Pass in all courses, allows for continuation towards the next semester.\n> Allows for the retainment of merit scholarship worth 50%%.");
+			break;
+		case 3:
+			printf("> Pass in all courses, allows for continuation towards the next semester.\n> Allows for the retainment of merit scholarship worth 100%%.");
+	}
+	printf("\n------------------------------------------------------------------------------------\nOther than that, ending your programme with a CGPA of %.2f also brings the following future perks (only applicable for degree programmes):\n",tCGPA);
+	switch (futurePerk) {
+	case 0:
+		printf("> Entry into a relevant degree programme upon passing a Qualifying Test.\n> No merit scholarship.");
+		break;
+	case 1:
+		printf("> Entry into a relevant degree programme.\n> No merit scholarship.");
+		break;
+	case 2:
+		printf("> Entry into a relevant degree programme.\n> Entitled to a 50%% merit scholarship upon enrollment subject to academic criteria.");
+		break;
+	case 3:
+		printf("> Entry into a relevant degree programme.\n> Entitled to a 100%% merit scholarship upon enrollment subject to academic criteria.");
+	}
+	printf("\n------------------------------------------------------------------------------------\n\nThank you for using this calculator!\n");
 }
 void main(){
 	int loop =1,studLoop=1;
