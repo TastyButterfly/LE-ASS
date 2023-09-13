@@ -189,9 +189,9 @@ void adminMenu() {
 		}
 		printf("\n1.Add new student.\n2.Enter student course details.\n3.View students' CGPA and GPA score.\n0.Exit\n");//prints menu
 		scanf("%d", &select);
-		while (select < 1 || select >3) {
+		while (select < 0 || select >3) {
 			rewind(stdin);
-			printf("Enter a value between 1 to 3!");
+			printf("Enter a value between 0 to 3!");
 			scanf("%d", &select);
 		}//checks input
 		switch (select) {
