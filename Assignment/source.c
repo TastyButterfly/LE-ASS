@@ -188,7 +188,7 @@ void adminMenu() {
 			putchar('=');
 		}
 		select = -1;
-		printf("\n1.Add new student.\n2.Enter student course details.\n3.View students' CGPA and GPA score.\n0.Exit admin menu and return to main menu\n");//prints menu
+		printf("\n1.Add new student.\n2.Enter student course details.\n3.View students' CGPA and GPA score.\n0.Exit admin menu.\n");//prints menu
 		scanf("%f", &select);
 		while (select != 0 && select !=1&&select!=2&&select!=3) {
 			rewind(stdin);
@@ -653,7 +653,7 @@ void adminMenu() {
 							}
 							itoa((int)year, studSem1Sub[ID][9], 10);
 							month = 0, year = 0;//reset value
-							printf("\n\nSemester 1 session date added sucessfully!\n\n");
+							printf("\n\nSemester 1 session date added successfully!\n\n");
 							strcpy(studentDetails[ID][5], "Y");
 						}
 						else if (sessionSelect == 2) {
@@ -771,7 +771,7 @@ void adminMenu() {
 							}
 							itoa((int)year, studSem1Sub[ID][9], 10);
 							month = 0, year = 0;//reset value
-							printf("\n\nSemester 2 session date added sucessfully!\n\n");
+							printf("\n\nSemester 2 session date added successfully!\n\n");
 							strcpy(studentDetails[ID][6], "Y");
 						}
 						else if (sessionSelect == 3) {
@@ -887,11 +887,11 @@ void adminMenu() {
 							}
 							itoa((int)year, studSem1Sub[ID][9], 10);
 							month = 0, year = 0;//reset value
-							printf("\n\nSemester 3 session date added sucessfully!\n\n");
+							printf("\n\nSemester 3 session date added successfully!\n\n");
 							strcpy(studentDetails[ID][7], "Y");
 						}
 					}
-					printf("Would you like to continue to edit this students' details? Type 1 to continue. Any other value to exit and return to admin menu.");
+					printf("Would you like to continue to edit this student's details? Type 1 to continue, any other value to exit and return to admin menu.");
 					if (scanf("%f", &loop3) == 0)loop3 = 0;
 					rewind(stdin);
 				}
