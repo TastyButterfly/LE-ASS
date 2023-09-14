@@ -17,18 +17,18 @@ char PIN[8], studentDetails[][8][61] = {{"KPKL1234","idk","Y","Y","Y","Y","Y","Y
 char* PINcheck[] = {"234567","123456","234565"};
 float studSem1GPA[][15]={{4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6}}, studSem2GPA[][15] = { {4.0,4.0,4.0,0,0,0,3,4,3,0,0,0,10,4.0,3} }, studSem3GPA[][15] = { {4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6} }, loginSelect = 0, menuSelect = 0;//gpa for respective course(0-5),sem credit hours(6-11),total credit hours(12),cgpa(13),number of subjects(14)
 void menu() {
-	int i;//counter
+	int i;//counter (applies for all instances of i and n)
 	for (i = 1;i <= 148;i++) {
 		putchar('*');
 		if (i == 70 || i == 140)printf("\n");
-	}
+	}//prints out 148 '*' with a newline at 70th and 148th *
 	printf("Welcome to Kolej Pasar's Multipurpose CGPA Calculator!");
 	for (i = 1;i <= 148;i++) {
 		putchar('*');
 		if (i==8||i == 78|| i == 148)printf("\n");
 	}
 	printf("\n\n");
-	for (i = 0; i < 50; i++) putchar('=');
+	for (i = 0; i < 50; i++) putchar('=');//prints out 50 '='
 	printf("\n%26s\n", "MENU");
 	for (i = 0; i < 50; i++) putchar('=');
 	printf("\n1.CGPA System\n2.CGPA Target Calculator\n0.Exit\n");
@@ -41,47 +41,23 @@ void menu() {
 	} while (menuSelect != 2 && menuSelect != 1&& menuSelect!=0);//if user does not input given options, they are asked to input again
 }
 void getAID() {
-	char AID[11], IDcheck[10];
-	if (attempt == 1) {
+	char AID[11], IDcheck[10];//AID is input, IDcheck is temp value to check input
+	if (attempt == 1) {//prints if first attempt
 		printf("Enter login credentials\nAdmin ID:");
 	}
-	else { printf("Record not found!\nAdmin ID:"); }
+	else { printf("Record not found!\nAdmin ID:"); }//prints on second attempt
 	scanf("%10s", AID);
 	rewind(stdin);//needed if input exceeds 10 characters, same applies to all rewinds after %ns after this occurence
-	FILE* file1 = fopen("AID.txt", "r");
+	FILE* file1 = fopen("AID.txt", "r");//opens file
 	rewind(file1);
-	while (fgets(IDcheck, sizeof(IDcheck), file1)) {
-		if (strcmp(AID, IDcheck) == 0) {
+	while (fgets(IDcheck, sizeof(IDcheck), file1)) {//reads file
+		if (strcmp(AID, IDcheck) == 0) {//check if it is equal
 			accID/=2;
-			attempt = 1;
 			printf("Logged in successfully.\n");
 			pass1 = 1;//is a global variable set to 0;allows the loop to exit
-			fclose(file1);	
+			fclose(file1);	//closes file when a match is found
 		}
-		else {accID++;}
-	}
-	attempt++;
-}
-void getSID() {
-	char SID[10];
-	int IDcheck=0,IDcheckline = 0;
-	if (attempt == 1) {
-		printf("Enter login credentials(0 to exit)\nStudent ID:");
-	}
-	else { printf("Record not found!(0 to exit)\nStudent ID:"); }
-	scanf("%9s",SID);
-	rewind(stdin);
-	for (int i = 0;i <(sizeof(studentDetails)/sizeof(studentDetails[0])); i++) {
-		if (strcmp(SID,studentDetails[i][0]) == 0) {
-			printf("Logged in successfully.\nWelcome, %s",studentDetails[i][1]);
-			pass3 = 1;//is a global variable set to 0;allows the loop to exit
-			attempt = 1;
-			break;
-		}
-		else if(strcmp(SID, "0") == 0) {
-			pass3 = -1;
-			break;
-		}
+		else {accID++;}//change accID position
 	}
 	attempt++;
 }
@@ -107,16 +83,18 @@ void getPW() {
 	printf("Enter PIN:");
 	scanf("%7s", PIN);
 	rewind(stdin);
-	if (strcmp(PIN,PINcheck[accID])==0) {
+	if (strcmp(PIN,PINcheck[accID])==0) {//if PIN is a match
 		pass2 = 1;
 	}
 	else {printf("Wrong password!\n");}
 }
 void studentMenu() {
-	int ID, loop = 1, i;
+	int ID, loop, i;//loop is loop for login function, ID is position of student in array(applies for all instances of ID)
 	char IDcheck[10];
-	float wcgpa = 0, totalcred = 0, totalcgpa = 0,loop2=1;
-	system("cls");
+	float wcgpa = 0, totalcred = 0, totalcgpa = 0,loop2=1;//loop2 for loop of entire function
+	while (loop2 == 1) {
+		system("cls");
+		loop = 1;
 	while (loop == 1) {
 		printf("Enter student ID:");//enter ID and check if id is available
 		scanf("%9s", IDcheck);
@@ -129,20 +107,20 @@ void studentMenu() {
 		}//verify ID
 		if (ID == sizeof(studentDetails) / sizeof(studentDetails[0])) printf("Record not found!\n");//runs if id is unavailable
 	}
-	while (loop2 == 1) {
-		printf("Name:%s\n----------------------------------------------------------------------------------\n", studentDetails[ID][1]);
-		if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1
+		system("cls");
+		printf("Student ID:%s\nName:%s\n----------------------------------------------------------------------------------\n", studentDetails[ID][0], studentDetails[ID][1]);//prints name and ID
+		if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1 session
 			printf("Semester 1 start: %s %s\nSemester 1 end: %s %s\n-----------------------------------------\n", studSem1Sub[ID][6], studSem1Sub[ID][7], studSem1Sub[ID][8], studSem1Sub[ID][9]);
 		else printf("Semester 1 start: No record found!\nSemester 1 end: No record found!\n-----------------------------------------\n");
-		printf("Semester 1 subjects taken: ");
-		if (strcmp(studentDetails[ID][2], "Y") == 0) {
+		printf("Semester 1 subjects taken: ");//semester 1 subjects
+		if (strcmp(studentDetails[ID][2], "Y") == 0) {//checks whether semester 1 data is entered
 			for (i = 0;i < studSem1GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem1Sub[ID][i], studSem1GPA[ID][i]);
 			printf("\n-----------------------------------------\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n----------------------------------------------------------------------------------\n", studSem1GPA[ID][14], studSem1GPA[ID][12], studSem1GPA[ID][13]);
-			wcgpa += studSem1GPA[ID][13] * studSem1GPA[ID][12];
-			totalcred += studSem1GPA[ID][12];
-		}
-		else printf("No record found!\n----------------------------------------------------------------------------------\n");
-		if (strcmp(studentDetails[ID][6], "Y") == 0)//semester 2
+			wcgpa += studSem1GPA[ID][13] * studSem1GPA[ID][12];//adds to total weighted cgpa
+			totalcred += studSem1GPA[ID][12];//find total credit hours
+		}//prints if data found
+		else printf("No record found!\n----------------------------------------------------------------------------------\n");//prints if no data; semester 2 and 3 share the same program structure
+		if (strcmp(studentDetails[ID][6], "Y") == 0)//semester 2 session
 			printf("Semester 2 start: %s %s\nSemester 2 end: %s %s\n-----------------------------------------\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
 		else printf("Semester 2 start: No record found!\nSemester 2 end: No record found!\n");
 		printf("Semester 2 subjects taken: ");
@@ -164,12 +142,12 @@ void studentMenu() {
 			totalcred += studSem3GPA[ID][12];
 		}
 		else printf("No record found!\n----------------------------------------------------------------------------------\n");
-		if (totalcred != 0)totalcgpa = wcgpa / totalcred;
-		else totalcgpa = 0;
-		if(strcmp(studentDetails[ID][2], "Y") != 0&&strcmp(studentDetails[ID][3], "Y") != 0&&strcmp(studentDetails[ID][4], "Y") != 0) printf("CGPA across 3 semesters: No record found!\n----------------------------------------------------------------------------------\n");
-		else printf("CGPA across 3 semesters:%.2f\n----------------------------------------------------------------------------------\n",totalcgpa);
+		if (totalcred != 0)totalcgpa = wcgpa / totalcred;//if total credit hours is NOT 0
+		else totalcgpa = 0;//if total credit hours is 0, not possible if there is weighted cgpa, error in data, prevents division error
+		if(strcmp(studentDetails[ID][2], "Y") != 0&&strcmp(studentDetails[ID][3], "Y") != 0&&strcmp(studentDetails[ID][4], "Y") != 0) printf("CGPA across 3 semesters: No record found!\n----------------------------------------------------------------------------------\n");//prints if no data is entered as total cannot hence be found
+		else printf("CGPA across 3 semesters:%.2f\n----------------------------------------------------------------------------------\n",totalcgpa);//prints total cgpa between all semesters
 		printf("\nDo you want to continue to view student details? Enter 1 to continue, any other value to exit.");
-		if (scanf("%d", &loop2) == 0)loop2 = 0;//runs if user inputs non-int value, regards it as exit loop
+		if (scanf("%f", &loop2) == 0) loop2 = 0;//runs if user inputs non-number value, regards it as exit loop
 		rewind(stdin);
 	}
 }
@@ -242,7 +220,7 @@ void adminMenu() {
 			studSem3GPA[ID][13] = 0;
 			studSem1GPA[ID][12] = 0;
 			studSem2GPA[ID][12] = 0;
-			studSem3GPA[ID][12] = 0;
+			studSem3GPA[ID][12] = 0;//establish data
 			printf("\nEnter new student name (max. 60 characters):");
 			scanf("%60[^\n]", studentDetails[ID][1]);
 			rewind(stdin);
@@ -270,7 +248,7 @@ void adminMenu() {
 				rewind(stdin);
 			}//check name confirmation
 			printf("\nNew student added sucessfully!\n\nWould you like to continue editing student details? Enter 1 to continue, any other value to stop and return to admin menu.");
-			if(scanf("%f", &loop)==0)loop=0;
+			if(scanf("%f", &loop)==0)loop=0;//if data entered is non-number, regards as exit loop
 			rewind(stdin);
 			break;
 		case 2://enter course details
@@ -321,9 +299,9 @@ void adminMenu() {
 						case 1:
 							studSem1GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
-							printf("You have selected Semester 1.\nEnter number of courses:");
-							scanf("%f", &subjectLoop);
-							while (subjectLoop != 1&& subjectLoop != 2 && subjectLoop != 3 && subjectLoop != 4 && subjectLoop != 5 && subjectLoop != 6) {
+							printf("You have selected Semester 1.\nEnter number of courses (max. 6 supported):");
+							scanf("%f", &subjectLoop);//purpose of float scanf for values that are supposed to be integers are so that system will not accept floating-point inputs(system will convert into into int if scanf is %d)
+							while (subjectLoop != 1&& subjectLoop != 2 && subjectLoop != 3 && subjectLoop != 4 && subjectLoop != 5 && subjectLoop != 6) {//if user did not input these accepted values
 								rewind(stdin);
 								printf("Enter a number between 1 to 6!");
 								scanf("%f", &subjectLoop);
@@ -334,7 +312,7 @@ void adminMenu() {
 								printf("Enter course code for subject %d:", n + 1);
 								scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
 								rewind(stdin);
-								while ((float)studSem1Sub[ID][n][6]-48< 0 ||(float)studSem1Sub[ID][n][6]-48>9) {
+								while ((float)studSem1Sub[ID][n][6]-48< 0 ||(float)studSem1Sub[ID][n][6]-48>9) {//float is used here as the value to be stored is also float
 									printf("Invalid course code!");
 									scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
 									rewind(stdin);
@@ -344,7 +322,7 @@ void adminMenu() {
 								printf("Enter grade obtained:");
 								scanf("%2s", grade);
 								gradeLoop = 1;
-								while (gradeLoop == 1) {
+								while (gradeLoop == 1) {//for all instances of this line, this is a while loop to convert grade to GPA
 									if (strcmp(grade, "A") == 0) {
 										studSem1GPA[ID][n] = A;
 										gradeLoop = 0;
@@ -379,7 +357,7 @@ void adminMenu() {
 									}
 									else {
 										rewind(stdin);
-										printf("Enter a valid grade!");
+										printf("Enter a valid grade!");//if input is invalid
 										scanf("%2s", grade);
 										rewind(stdin);
 									}
@@ -387,9 +365,9 @@ void adminMenu() {
 								printf("-------------------------------------------\n");
 							}
 							strcpy(studentDetails[ID][2], "Y");
-							calcCGPA(1,subjectLoop,ID);
+							calcCGPA(1,subjectLoop,ID);//calculate CGPA
 							break;
-						case 2:
+						case 2://2nd semester, structure same as 1st sem
 							studSem2GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
 							printf("You have selected Semester 2.\nEnter number of courses:");
@@ -410,7 +388,7 @@ void adminMenu() {
 									rewind(stdin);
 								}
 								studSem2GPA[ID][n + 6] = (float)studSem2Sub[ID][n][6] - 48;//course weightage
-								studSem2GPA[ID][12] += studSem2GPA[ID][n + 6];
+								studSem2GPA[ID][12] += studSem2GPA[ID][n + 6];//total credit hours
 								printf("Enter grade obtained:");
 								scanf("%2s", grade);
 								gradeLoop = 1;
@@ -458,7 +436,7 @@ void adminMenu() {
 							strcpy(studentDetails[ID][3], "Y");
 							calcCGPA(2, subjectLoop, ID);
 							break;
-						case 3:
+						case 3://3rd semester, refer to 1st semester comments
 							studSem3GPA[ID][12] = 0;//reset credit hours
 							subjectLoop = 0;//reset parameters
 							printf("You have selected Semester 3.\nEnter the number of courses:");
@@ -529,29 +507,29 @@ void adminMenu() {
 							calcCGPA(3, subjectLoop, ID);
 						}
 						break;
-					case 2:
+					case 2://enter student session
 						month = 0, year = 0;//reset value
 						sessionSelect = 0;
 						printf("Enter edited semester (1,2 or 3):");
 						scanf("%f", &sessionSelect);
 						rewind(stdin);
-						while (sessionSelect != 1 && sessionSelect!=2 && sessionSelect!=3) {
+						while (sessionSelect != 1 && sessionSelect!=2 && sessionSelect!=3) {//if it is not an accepted value
 							rewind(stdin);
 							printf("Enter 1,2 or 3 only!\n");
 							scanf("%f", &sessionSelect);
 						}//check user input validity
 						if (sessionSelect == 1) {
 							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
-							scanf("%f",&month);
+							scanf("%f",&month);//again, prevent floating point input being accepeted by compiler
 							rewind(stdin);
-							while (month < 1 || month>12 || ((int)month) - month != 0) {
+							while (month < 1 || month>12 || ((int)month) - month != 0) {//third condition is if it is not an integer
 								printf("Enter a valid month! Starting month:");
 								scanf("%f", &month);
 								rewind(stdin);
 							}
-							switch ((int)month) {
+							switch ((int)month) {//converts float to int for switch case
 							case 1:
-								strcpy(studSem1Sub[ID][6], "January");
+								strcpy(studSem1Sub[ID][6], "January");//copies January into studSem1Sub[ID][6]
 								break;
 							case 2:
 								strcpy(studSem1Sub[ID][6], "February");
@@ -588,16 +566,16 @@ void adminMenu() {
 								break;
 							}
 							printf("Enter starting year (e.g 2023):");
-							scanf("%f", &year);
+							scanf("%f", &year);//used to prevent inputs such as 2022.5 from being accepted
 							rewind(stdin);
 							while (year < 2000 || year>2100||((int)year)-year!=0) {
 								printf("Invalid year! Only integer values of 2000~2100 are supported!\nEnter starting year:");
 								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa((int)year, studSem1Sub[ID][7],10);
+							itoa((int)year, studSem1Sub[ID][7],10);//converts integer (year) to a string to be stored in a string array (int) is used here as year is initially a float, itoa means integer to argument, 3rd parameter is number base
 							month = 0, year = 0;//reset value
-							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
+							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");//ending and starting month and year entry has same structure as starting
 							scanf("%f", &month);
 							rewind(stdin);
 							while (month < 1 || month>12 || ((int)month) - month != 0) {
@@ -605,7 +583,7 @@ void adminMenu() {
 								scanf("%f", &month);
 								rewind(stdin);
 							}
-							switch ((int)month) {
+							switch ((int)month) {//converts to int got switch case
 							case 1:
 								strcpy(studSem1Sub[ID][8], "January");
 								break;
@@ -656,7 +634,7 @@ void adminMenu() {
 							printf("\n\nSemester 1 session date added successfully!\n\n");
 							strcpy(studentDetails[ID][5], "Y");
 						}
-						else if (sessionSelect == 2) {
+						else if (sessionSelect == 2) {//2nd semester, same structure as 1st
 							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
 							scanf("%f", &month);
 							rewind(stdin);
@@ -774,7 +752,7 @@ void adminMenu() {
 							printf("\n\nSemester 2 session date added successfully!\n\n");
 							strcpy(studentDetails[ID][6], "Y");
 						}
-						else if (sessionSelect == 3) {
+						else if (sessionSelect == 3) {//3rd semester has same stucture as 1st, refer to those comments
 							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
 							scanf("%f", &month);
 							rewind(stdin);
@@ -896,29 +874,29 @@ void adminMenu() {
 					rewind(stdin);
 				}
 			break;
-		case 3:
+		case 3://prints student menu
 			studentMenu();
 			break;
 		}
 	}
 }
-int calcCGPA(sem,sub,ID) {
+int calcCGPA(sem,sub,ID) {//features multiple parameters, 1st is semester, 2nd is number of subject, 3rd is student position within array
 	int i;
-	float cred=0,wgpa=0;
-	switch (sem) {
-		case 1:
+	float cred=0,wgpa=0;//credit and weighted GPA
+	switch (sem) {//semester 
+		case 1://1st
 			for (i = 0;i < sub;i++) {
 				cred += studSem1GPA[ID][i+6];
-				wgpa += studSem1GPA[ID][i] * studSem1GPA[ID][i + 6];
+				wgpa += studSem1GPA[ID][i] * studSem1GPA[ID][i + 6];//credit hours*GPA
 			}
 			studSem1GPA[ID][13] = wgpa / cred;
-		case 2:
+		case 2://2nd
 			for (i = 0;i < sub;i++) {
 				cred += studSem2GPA[ID][i + 6];
 				wgpa += studSem2GPA[ID][i] * studSem2GPA[ID][i + 6];
 			}
 			studSem2GPA[ID][13] = wgpa / cred;
-		case 3:
+		case 3://3rd
 			for (i = 0;i < sub;i++) {
 				cred += studSem3GPA[ID][i + 6];
 				wgpa += studSem3GPA[ID][i] * studSem3GPA[ID][i + 6];
@@ -935,7 +913,7 @@ void targetCalc() {
 	for (i = 0; i < 50; i++) putchar('=');
 	printf("\n%41s\n", "WELCOME TO CGPA TARGET CALCULATOR");
 	for (i = 0; i < 50; i++) putchar('=');
-	printf("\nMaking your college life easier!\n1.Import CGPA from existing student ID\n2.Manually input last semester's CGPA\n");
+	printf("\nMaking your college life easier!\n1.Import CGPA from existing student ID\n2.Manually input last semester's CGPA\n");//menu
 	while (scanf("%f", &select) == 0 || select != 1 && select != 2) {
 		rewind(stdin);
 		printf("Invalid input! Enter 1 or 2 only!\n");
@@ -965,11 +943,11 @@ void targetCalc() {
 		else if (strcmp(studentDetails[ID][2], "Y") == 0) {
 			printf("\nHello, %s. Your last semester's (Semester 1) CGPA is %.2f\n", studentDetails[ID][1], studSem1GPA[ID][13]);
 			lastCGPA = studSem1GPA[ID][13];
-		}
+		}//prints out last semester's CGPA (starting from semester 3 to 1)
 		else {
 			printf("\nHello %s. Unfortunately, you have not entered any subjects into the system yet. Hence, your last semester's CGPA cannot be determined. Please manually enter your last semester's CGPA.\n", studentDetails[ID][1]);
 			select = 2;
-		}
+		}//if no data found, asks user to manually enter
 	}
 	if (select == 2) {//else if is not used here as the user may be directed here even though they selected 1 (refer to line 968's else clause)
 		printf("\nEnter your last semester's CGPA:");
@@ -980,20 +958,20 @@ void targetCalc() {
 		lastCGPA = round(lastCGPA * 100) / 100;
 		rewind(stdin);
 	}
-	printf("\n%-72s:","Enter the total credit hours for MPU subjects for your next semester");
-	while (scanf("%d", &mpuCred) == 0 || mpuCred< 0) {
+	printf("\n%-72s:","Enter the total credit hours for MPU subjects for your next semester");//enter MPU total credit hours
+	while (scanf("%d", &mpuCred) == 0 || mpuCred< 0) {//if negative value/invalid value
 		rewind(stdin);
 		printf("Enter a valid positive integer!\n\nEnter the total credit hours for MPU subjects for your next semester:");
 	}
 	rewind(stdin);
-	printf("\n%-72s:","Enter the total credit hours for non-MPU subjects for your next semester");
-	while (scanf("%d", &nCred) == 0 || nCred < 0) {
+	printf("\n%-72s:","Enter the total credit hours for non-MPU subjects for your next semester");//enter normal subject total credit hours
+	while (scanf("%d", &nCred) == 0 || nCred < 0) {//invalid value
 		rewind(stdin);
 		printf("Enter a valid positive integer!\n\nEnter the total credit hours for non-MPU subjects for your next semester:");
 	}
 	rewind(stdin);
 	printf("\nEnter your current merit scholarship status:\n1. 100%%\n2. 50%%\n3. 25%%\n4. 20%%\n5. 15%%\n0. None.\n");
-	while (scanf("%d", &merit) == 0 || merit< 0||merit>5) {
+	while (scanf("%d", &merit) == 0 || merit< 0||merit>5) {//invalid value
 		rewind(stdin);
 		printf("Invalid value entered!\n\nEnter your current merit scholarship status:");
 	}
@@ -1001,20 +979,20 @@ void targetCalc() {
 	system("cls");
 	tCGPA =(ceil(lastCGPA * 10) / 10)+0.1;
 	if (tCGPA > 4)tCGPA = 4;//ensure target CGPA does not exceed 4.0 as it is not possible
-	tnGPA = (float)(tCGPA*(mpuCred+nCred)-(0.5*mpuCred))/(mpuCred+nCred);
+	tnGPA = (float)(tCGPA*(mpuCred+nCred)-(0.5*mpuCred))/(mpuCred+nCred);//simultaneous equations
 	tMPUGPA = tnGPA + 0.5;
-	if (tnGPA < 2) {
+	if (tnGPA < 2) {//normal target GPA cannot be below 2 (fail)
 		tnGPA = 2;
 		tMPUGPA = 2.5;
 		tCGPA = (float)(nCred*tnGPA+mpuCred*tMPUGPA)/(nCred+mpuCred);//target CGPA recalculation
 	}
-	else if (tnGPA > 3.5) {
+	else if (tnGPA > 3.5) {//if MPU target GPA exceeds 4 (or normal GPA exceeds 3.5 which causes the former to happen)
 		tnGPA = (float)(tCGPA * (mpuCred + nCred)-(4*mpuCred))/nCred;
 		if (tnGPA < 2) tnGPA = 2;
 		tMPUGPA = 4;
 		tCGPA = (float)(nCred * tnGPA + mpuCred * tMPUGPA) / (nCred + mpuCred);//target GPA recalculation
 	}
-	if (tCGPA < 3) perk = 0;
+	if (tCGPA < 3) perk = 0;//determine perks and benefits
 	else if (tCGPA >= 3.0 && tCGPA < 3.25) {
 		if (merit != 0) perk = 1;
 		else perk = 0;
@@ -1030,11 +1008,11 @@ void targetCalc() {
 		else if (merit != 0) perk = 1;
 		else perk = 0;
 	}
-	if (tCGPA >= 3.85) futurePerk = 3;
+	if (tCGPA >= 3.85) futurePerk = 3;//determine future perks
 	else if (tCGPA >= 3.75&& tCGPA<=3.85)futurePerk = 2;
 	else if (tCGPA >= 2.5&&tCGPA<=3.75) futurePerk = 1;
 	else futurePerk = 0;
-	switch (merit) {
+	switch (merit) {//switch case, to find out merit percent
 		case 0:
 			strcpy(meritPercent, "0%");
 			break;
@@ -1053,10 +1031,8 @@ void targetCalc() {
 		case 5:
 			strcpy(meritPercent, "15%");
 	}
-	printf("Your last semester's CGPA (rounded to 2 d.p) is %.2f.\nYour targeted CGPA is %.2f.\n\n------------------------------------------------------------------------------------\n", lastCGPA, tCGPA);
-	printf("Your targeted GPA for non-MPU subjects: %.2f\nYour targeted GPA for MPU subjects: %.2f\n------------------------------------------------------------------------------------\n",tnGPA,tMPUGPA);
-	printf("A targeted CGPA of %.2f with a current merit scholarship of %s unlocks the following perks and benefits if the target is attained:\n",tCGPA,meritPercent);
-	switch (perk) {
+	printf("Your last semester's CGPA (rounded to 2 d.p) is %.2f.\nYour targeted CGPA is %.2f.\n\n------------------------------------------------------------------------------------\nYour targeted GPA for non-MPU subjects: %.2f\nYour targeted GPA for MPU subjects: %.2f\n------------------------------------------------------------------------------------\nA targeted CGPA of %.2f with a current merit scholarship of %s unlocks the following perks and benefits if the target is attained:\n", lastCGPA, tCGPA,tnGPA,tMPUGPA,tCGPA,meritPercent);
+	switch (perk) {//output current perks
 		case 0:
 			printf("> Pass in all courses, allows for continuation towards the next semester.\n> No merit scholarship.");
 			break;
@@ -1072,7 +1048,7 @@ void targetCalc() {
 			printf("> Pass in all courses, allows for continuation towards the next semester.\n> Allows for the retainment of merit scholarship worth 100%%.");
 	}
 	printf("\n------------------------------------------------------------------------------------\nOther than that, ending your programme with a CGPA of %.2f also brings the following future perks (only applicable for degree programmes):\n",tCGPA);
-	switch (futurePerk) {
+	switch (futurePerk) {//output future perks
 	case 0:
 		printf("> Entry into a relevant degree programme upon passing a Qualifying Test.\n> No merit scholarship.");
 		break;
@@ -1085,12 +1061,12 @@ void targetCalc() {
 	case 3:
 		printf("> Entry into a relevant degree programme.\n> Entitled to a 100%% merit scholarship upon enrollment subject to academic criteria.");
 	}
-	printf("\n------------------------------------------------------------------------------------\n\nThank you for using this calculator!\n");
+	printf("\n------------------------------------------------------------------------------------\n\nThank you for using this target calculator!\n");
 }
 void main(){
 	float loop =1;
 	while (loop ==1) {
-		attempt = 1;
+		attempt = 1;//reset attempt
 		menuSelect = -1;
 		menu();
 		if (menuSelect == 1) {
@@ -1112,11 +1088,11 @@ void main(){
 			}
 		}
 		else if (menuSelect == 2) targetCalc();
-		else if (menuSelect == 0) exit(1);
+		else if (menuSelect == 0) exit(1);//exit program
 		printf("\nWould you like to continue using this program? Type 1 to continue; any other value to exit.\n");
 		if (scanf("%f", &loop) == 0)loop = 0;//runs if user inputs non-int value, regards it as exit loop;
 		rewind(stdin);
 		system("cls");//clears console
 	}
-	if (loop != 1)exit(0);
+	if (loop != 1)exit(0);//also exit program
 }
