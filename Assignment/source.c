@@ -153,7 +153,7 @@ void studentMenu() {
 }
 void adminMenu() {
 	//above is to print admin menu, clears console
-	int i,n, loop2 = 1, ID,check, gradeLoop = 1;//i is for menu counter, n is for function counter
+	int i,n, loop2 = 1, ID,check, gradeLoop = 1,pass1,pass2;//i is for menu counter, n is for function counter
 	char IDcheck[10], grade[4],IDConfirm[10],nameConfirm[62];
 	float totalcgpa=0,wcgpa=0,totalcred=0,select,menu2select=0,subjectLoop = 0, semSelect = 0,sessionSelect = 0, month = 0, year = 0,loop=1,loop3=1;
 	while (loop == 1) {
@@ -178,6 +178,7 @@ void adminMenu() {
 			loop = 0;
 			break;//exit
 		case 1://add new student
+			pass1 = 0,pass2 = 0;
 			system("cls");
 			for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
 				if (strcmp(studentDetails[ID][0], "") == 0) break;//check id validity
@@ -188,26 +189,32 @@ void adminMenu() {
 			printf("Confirm ID (ID cannot be changed!):");
 			scanf("%9s", IDConfirm);
 			rewind(stdin);
-			for (check = 0; check < (sizeof(studentDetails) / sizeof(studentDetails[0])) - 1;check++) {
-				if (strcmp(studentDetails[ID][0], studentDetails[check][0]) == 0) {
-					printf("ID is already used!\n");
+			while (pass1 == 0) {
+				for (check = 0; check < (sizeof(studentDetails) / sizeof(studentDetails[0])) - 1;check++) {
+					if (strcmp(studentDetails[ID][0], studentDetails[check][0]) == 0) {
+						printf("ID is already used!\n");
+						printf("Enter new student ID:");
+						scanf("%9s", studentDetails[ID][0]);
+						rewind(stdin);
+						printf("Confirm ID (ID cannot be changed!):");
+						scanf("%9s", IDConfirm);
+						rewind(stdin);
+					}
+				}//check id duplicate
+				while (strcmp(studentDetails[ID][0], IDConfirm) != 0 || strlen(studentDetails[ID][0]) != 8) {
+					printf("ID does not match or is invalid!\n");
 					printf("Enter new student ID:");
 					scanf("%8s", studentDetails[ID][0]);
 					rewind(stdin);
 					printf("Confirm ID (ID cannot be changed!):");
 					scanf("%9s", IDConfirm);
 					rewind(stdin);
-				}
-			}//check id duplicate
-			while (strcmp(studentDetails[ID][0], IDConfirm) != 0||strlen(studentDetails[ID][0]) != 8) {
-				printf("ID does not match or is invalid!\n");
-				printf("Enter new student ID:");
-				scanf("%8s", studentDetails[ID][0]);
-				rewind(stdin);
-				printf("Confirm ID (ID cannot be changed!):");
-				scanf("%9s", IDConfirm);
-				rewind(stdin);
-			}//check confirmation id match
+				}//check confirmation id match
+				for (check = 0; check < (sizeof(studentDetails) / sizeof(studentDetails[0])) - 1;check++)
+					if (strcmp(studentDetails[ID][0], studentDetails[check][0]) == 0)
+						break;
+				if (check == (sizeof(studentDetails) / sizeof(studentDetails[0])) - 1 && strcmp(studentDetails[ID][0], IDConfirm) == 0 && strlen(studentDetails[ID][0]) == 8)pass1 = 1;//if fulfill conditions, exit loop
+			}
 			strcpy(studentDetails[ID + 1][0], "");
 			strcpy(studentDetails[ID][2],"N");
 			strcpy(studentDetails[ID][3], "N");
@@ -227,26 +234,32 @@ void adminMenu() {
 			printf("Confirm name (name cannot be changed!):");
 			scanf("%61[^\n]", nameConfirm);//higher characters read to prevent different length strings from passing checks
 			rewind(stdin);
-			for (check = 0; check < (sizeof(studentDetails) / sizeof(studentDetails[0])) - 1;check++) {
-				if (strcmp(studentDetails[ID][1], studentDetails[check][1]) == 0) {
-					printf("Name is already used!\n");
-					printf("Enter new student name (max. 60 characters):");
+			while (pass2 == 0) {
+				for (check = 0; check < (sizeof(studentDetails) / sizeof(studentDetails[0])) - 1;check++) {
+					if (strcmp(studentDetails[ID][1], studentDetails[check][1]) == 0) {
+						printf("Name is already used!\n");
+						printf("Enter new student name (max. 60 characters):");
+						scanf("%60[^\n]", studentDetails[ID][1]);
+						rewind(stdin);
+						printf("Confirm name (name cannot be changed!):");
+						scanf("%61[^\n]", nameConfirm);
+						rewind(stdin);
+					}
+				}//check duplicate name
+				while (strcmp(studentDetails[ID][1], nameConfirm) != 0 || strlen(studentDetails[ID][1]) != strlen(nameConfirm)) {
+					printf("Name does not match!\n");
+					printf("Enter new student name:");
 					scanf("%60[^\n]", studentDetails[ID][1]);
 					rewind(stdin);
 					printf("Confirm name (name cannot be changed!):");
 					scanf("%61[^\n]", nameConfirm);
 					rewind(stdin);
-				}
-			}//check duplicate name
-			while (strcmp(studentDetails[ID][1], nameConfirm) != 0||strlen(studentDetails[ID][1])!=strlen(nameConfirm)) {
-				printf("Name does not match!\n");
-				printf("Enter new student name:");
-				scanf("%60[^\n]", studentDetails[ID][1]);
-				rewind(stdin);
-				printf("Confirm name (name cannot be changed!):");
-				scanf("%61[^\n]", nameConfirm);
-				rewind(stdin);
-			}//check name confirmation if name does not match or length does not match (strlen is used here as user can input a name 60 characters in length then confirm it with an even longer string that has matching first 60 characters which would be unequal, this prevents that.
+				}//check name confirmation if name does not match or length does not match (strlen is used here as user can input a name 60 characters in length then confirm it with an even longer string that has matching first 60 characters which would be unequal, this prevents that.
+				for (check = 0; check < (sizeof(studentDetails) / sizeof(studentDetails[0])) - 1;check++)
+					if (strcmp(studentDetails[ID][1], studentDetails[check][1]) == 0)
+						break;
+				if (check == (sizeof(studentDetails) / sizeof(studentDetails[0])) - 1 && strcmp(studentDetails[ID][1], nameConfirm) == 0 && strlen(studentDetails[ID][1]) == strlen(nameConfirm))pass2 = 1;
+			}
 			printf("\nNew student added sucessfully!\n\nWould you like to continue using the admin menu? Enter 1 to continue, any other value to stop and return to main menu.\n");
 			if(scanf("%f", &loop)==0)loop=0;//if data entered is non-number, regards as exit loop
 			rewind(stdin);
