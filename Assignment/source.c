@@ -247,7 +247,7 @@ void adminMenu() {
 				scanf("%60[^\n]", nameConfirm);
 				rewind(stdin);
 			}//check name confirmation
-			printf("\nNew student added sucessfully!\n\nWould you like to continue editing student details? Enter 1 to continue, any other value to stop and return to admin menu.");
+			printf("\nNew student added sucessfully!\n\nWould you like to continue using the admin menu? Enter 1 to continue, any other value to stop and return to main menu.\n");
 			if(scanf("%f", &loop)==0)loop=0;//if data entered is non-number, regards as exit loop
 			rewind(stdin);
 			break;
