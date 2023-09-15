@@ -462,7 +462,7 @@ void adminMenu() {
 							studSem3GPA[ID][14] = subjectLoop;
 							for (int n = 0;n < subjectLoop;n++) {
 								printf("Enter course code for subject %d: ", n + 1);
-								scanf("%8s", studSem3Sub[ID][n]);//reads until 7 chars only
+								scanf("%8s", studSem3Sub[ID][n]);//reads until 8 chars only
 								rewind(stdin);
 								while ((float)studSem3Sub[ID][n][6] - 48 < 0 || (float)studSem3Sub[ID][n][6] - 48 > 9||strlen(studSem3Sub[ID][n])!=7) {//pass if 7th char is 0~9 and is 7 chars in length
 									printf("Invalid course code!");
