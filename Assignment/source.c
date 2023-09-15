@@ -154,7 +154,7 @@ void studentMenu() {
 void adminMenu() {
 	//above is to print admin menu, clears console
 	int i,n, loop2 = 1, ID,check, gradeLoop = 1;//i is for menu counter, n is for function counter
-	char IDcheck[10], grade[3],IDConfirm[10],nameConfirm[61];
+	char IDcheck[10], grade[4],IDConfirm[10],nameConfirm[62];
 	float totalcgpa=0,wcgpa=0,totalcred=0,select,menu2select=0,subjectLoop = 0, semSelect = 0,sessionSelect = 0, month = 0, year = 0,loop=1,loop3=1;
 	while (loop == 1) {
 		system("cls");
@@ -183,7 +183,7 @@ void adminMenu() {
 				if (strcmp(studentDetails[ID][0], "") == 0) break;//check id validity
 			}
 			printf("Enter new student ID:");
-			scanf("%8s", studentDetails[ID][0]);
+			scanf("%9s", studentDetails[ID][0]);
 			rewind(stdin);
 			printf("Confirm ID (ID cannot be changed!):");
 			scanf("%9s", IDConfirm);
@@ -199,7 +199,7 @@ void adminMenu() {
 					rewind(stdin);
 				}
 			}//check id duplicate
-			while (strcmp(studentDetails[ID][0], IDConfirm) != 0) {
+			while (strcmp(studentDetails[ID][0], IDConfirm) != 0||strlen(studentDetails[ID][0]) != 8) {
 				printf("ID does not match or is invalid!\n");
 				printf("Enter new student ID:");
 				scanf("%8s", studentDetails[ID][0]);
@@ -225,7 +225,7 @@ void adminMenu() {
 			scanf("%60[^\n]", studentDetails[ID][1]);
 			rewind(stdin);
 			printf("Confirm name (name cannot be changed!):");
-			scanf("%60[^\n]", nameConfirm);
+			scanf("%61[^\n]", nameConfirm);//higher characters read to prevent different length strings from passing checks
 			rewind(stdin);
 			for (check = 0; check < (sizeof(studentDetails) / sizeof(studentDetails[0])) - 1;check++) {
 				if (strcmp(studentDetails[ID][1], studentDetails[check][1]) == 0) {
@@ -234,19 +234,19 @@ void adminMenu() {
 					scanf("%60[^\n]", studentDetails[ID][1]);
 					rewind(stdin);
 					printf("Confirm name (name cannot be changed!):");
-					scanf("%60[^\n]", nameConfirm);
+					scanf("%61[^\n]", nameConfirm);
 					rewind(stdin);
 				}
 			}//check duplicate name
-			while (strcmp(studentDetails[ID][1], nameConfirm) != 0) {
+			while (strcmp(studentDetails[ID][1], nameConfirm) != 0||strlen(studentDetails[ID][1])!=strlen(nameConfirm)) {
 				printf("Name does not match!\n");
 				printf("Enter new student name:");
 				scanf("%60[^\n]", studentDetails[ID][1]);
 				rewind(stdin);
 				printf("Confirm name (name cannot be changed!):");
-				scanf("%60[^\n]", nameConfirm);
+				scanf("%61[^\n]", nameConfirm);
 				rewind(stdin);
-			}//check name confirmation
+			}//check name confirmation if name does not match or length does not match (strlen is used here as user can input a name 60 characters in length then confirm it with an even longer string that has matching first 60 characters which would be unequal, this prevents that.
 			printf("\nNew student added sucessfully!\n\nWould you like to continue using the admin menu? Enter 1 to continue, any other value to stop and return to main menu.\n");
 			if(scanf("%f", &loop)==0)loop=0;//if data entered is non-number, regards as exit loop
 			rewind(stdin);
@@ -320,7 +320,7 @@ void adminMenu() {
 								studSem1GPA[ID][n + 6] = (float)studSem1Sub[ID][n][6] - 48;//course weightage
 								studSem1GPA[ID][12] += studSem1GPA[ID][n + 6];
 								printf("Enter grade obtained:");
-								scanf("%2s", grade);
+								scanf("%3s", grade);//reads 3 chars instead of 2 to prevent long strings that starts with a valid grade from passing checks, applies to all instances of this line with equal syntax 
 								gradeLoop = 1;
 								while (gradeLoop == 1) {//for all instances of this line, this is a while loop to convert grade to GPA
 									if (strcmp(grade, "A") == 0) {
@@ -358,7 +358,7 @@ void adminMenu() {
 									else {
 										rewind(stdin);
 										printf("Enter a valid grade!");//if input is invalid
-										scanf("%2s", grade);
+										scanf("%3s", grade);
 										rewind(stdin);
 									}
 								}
@@ -390,7 +390,7 @@ void adminMenu() {
 								studSem2GPA[ID][n + 6] = (float)studSem2Sub[ID][n][6] - 48;//course weightage
 								studSem2GPA[ID][12] += studSem2GPA[ID][n + 6];//total credit hours
 								printf("Enter grade obtained:");
-								scanf("%2s", grade);
+								scanf("%3s", grade);
 								gradeLoop = 1;
 								while (gradeLoop == 1) {
 									if (strcmp(grade, "A") == 0) {
@@ -428,7 +428,7 @@ void adminMenu() {
 									else {
 										rewind(stdin);
 										printf("Enter a valid grade!");
-										scanf("%2s", grade);
+										scanf("%3s", grade);
 									}
 								}
 								printf("-------------------------------------------\n");
@@ -459,7 +459,7 @@ void adminMenu() {
 								studSem3GPA[ID][n + 6] = (float)studSem3Sub[ID][n][6] - 48;//course weightage
 								studSem3GPA[ID][12] += studSem3GPA[ID][n + 6];
 								printf("Enter grade obtained:");
-								scanf("%2s", grade);
+								scanf("%3s", grade);
 								gradeLoop = 1;
 								while (gradeLoop == 1) {
 									if (strcmp(grade, "A") == 0) {
@@ -497,7 +497,7 @@ void adminMenu() {
 									else {
 										rewind(stdin);
 										printf("Enter a valid grade!");
-										scanf("%2s", grade);
+										scanf("%3s", grade);
 									}
 								}
 								printf("-------------------------------------------\n");
