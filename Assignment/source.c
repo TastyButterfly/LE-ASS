@@ -312,7 +312,7 @@ void adminMenu() {
 								printf("Enter course code for subject %d:", n + 1);
 								scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
 								rewind(stdin);
-								while ((float)studSem1Sub[ID][n][6]-48< 0 ||(float)studSem1Sub[ID][n][6]-48>9) {//float is used here as the value to be stored is also float
+								while ((float)studSem1Sub[ID][n][6]-48<= 0 ||(float)studSem1Sub[ID][n][6]-48>9) {//float is used here as the value to be stored is also float
 									printf("Invalid course code!");
 									scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
 									rewind(stdin);
