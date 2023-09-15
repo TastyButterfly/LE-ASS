@@ -310,11 +310,11 @@ void adminMenu() {
 							studSem1GPA[ID][14] = subjectLoop;
 							for (n = 0;n < subjectLoop;n++) {
 								printf("Enter course code for subject %d:", n + 1);
-								scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
+								scanf("%8s", studSem1Sub[ID][n]);//reads until 7 chars only
 								rewind(stdin);
-								while ((float)studSem1Sub[ID][n][6]-48<= 0 ||(float)studSem1Sub[ID][n][6]-48>9) {//float is used here as the value to be stored is also float
+								while ((float)studSem1Sub[ID][n][6]-48<= 0 ||(float)studSem1Sub[ID][n][6]-48>9|| strlen(studSem1Sub[ID][n]) != 7) {//float is used here as the value to be stored is also float
 									printf("Invalid course code!");
-									scanf("%7s", studSem1Sub[ID][n]);//reads until 7 chars only
+									scanf("%8s", studSem1Sub[ID][n]);//reads until 7 chars only
 									rewind(stdin);
 								}
 								studSem1GPA[ID][n + 6] = (float)studSem1Sub[ID][n][6] - 48;//course weightage
@@ -380,11 +380,11 @@ void adminMenu() {
 							studSem2GPA[ID][14] = subjectLoop;
 							for (n = 0;n < subjectLoop;n++) {
 								printf("Enter course code for subject %d: ", n + 1);
-								scanf("%7s", studSem2Sub[ID][n]);//reads until 7 chars only
+								scanf("%8s", studSem2Sub[ID][n]);//reads until 7 chars only
 								rewind(stdin);
-								while ((float)studSem2Sub[ID][n][6] - 48 < 0 || (float)studSem2Sub[ID][n][6] - 48 > 9) {
+								while ((float)studSem2Sub[ID][n][6] - 48 < 0 || (float)studSem2Sub[ID][n][6] - 48 > 9||strlen(studSem2Sub[ID][n]) != 7) {
 									printf("Invalid course code!");
-									scanf("%7s", studSem2Sub[ID][n]);//reads until 7 chars only
+									scanf("%8s", studSem2Sub[ID][n]);//reads until 7 chars only
 									rewind(stdin);
 								}
 								studSem2GPA[ID][n + 6] = (float)studSem2Sub[ID][n][6] - 48;//course weightage
@@ -449,11 +449,11 @@ void adminMenu() {
 							studSem3GPA[ID][14] = subjectLoop;
 							for (int n = 0;n < subjectLoop;n++) {
 								printf("Enter course code for subject %d: ", n + 1);
-								scanf("%7s", studSem3Sub[ID][n]);//reads until 7 chars only
+								scanf("%8s", studSem3Sub[ID][n]);//reads until 7 chars only
 								rewind(stdin);
-								while ((float)studSem3Sub[ID][n][6] - 48 < 0 || (float)studSem3Sub[ID][n][6] - 48 > 9) {
+								while ((float)studSem3Sub[ID][n][6] - 48 < 0 || (float)studSem3Sub[ID][n][6] - 48 > 9||strlen(studSem3Sub[ID][n])!=7) {
 									printf("Invalid course code!");
-									scanf("%7s", studSem3Sub[ID][n]);//reads until 7 chars only
+									scanf("%8s", studSem3Sub[ID][n]);//reads until 7 chars only
 									rewind(stdin);
 								}
 								studSem3GPA[ID][n + 6] = (float)studSem3Sub[ID][n][6] - 48;//course weightage
