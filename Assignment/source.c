@@ -112,7 +112,7 @@ void studentMenu() {
 		if (strcmp(studentDetails[ID][5], "Y") == 0)//semester 1 session
 			printf("Semester 1 start: %s %s\nSemester 1 end: %s %s\n-----------------------------------------\n", studSem1Sub[ID][6], studSem1Sub[ID][7], studSem1Sub[ID][8], studSem1Sub[ID][9]);
 		else printf("Semester 1 start: No record found!\nSemester 1 end: No record found!\n-----------------------------------------\n");
-		printf("Semester 1 subjects taken: ");//semester 1 subjects
+		printf("Semester 1 subjects taken:");//semester 1 subjects
 		if (strcmp(studentDetails[ID][2], "Y") == 0) {//checks whether semester 1 data is entered
 			for (i = 0;i < studSem1GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem1Sub[ID][i], studSem1GPA[ID][i]);
 			printf("\n-----------------------------------------\nNumber of subjects: %.0f\nTotal credit hours: %.0f\nCGPA: %.2f\n----------------------------------------------------------------------------------\n", studSem1GPA[ID][14], studSem1GPA[ID][12], studSem1GPA[ID][13]);
@@ -297,7 +297,9 @@ void adminMenu() {
 						scanf("%f", &menu2select);
 					}//check user input validity
 					switch ((int)menu2select) {
-					case 0:break;
+					case 0:
+						loop3 = 0;
+						break;
 					case 1://input course code and grade
 						semSelect = 0;
 						printf("Enter edited semester (1,2 or 3):");
@@ -332,7 +334,7 @@ void adminMenu() {
 									scanf("%8s", studSem1Sub[ID][n]);//reads until 8 chars only, length is checked to only pass if it is equal to 7
 									rewind(stdin);
 								}
-								studSem1GPA[ID][n + 6] = (float)studSem1Sub[ID][n][6] - 48;//course weightage
+								studSem1GPA[ID][n + 6] = (int)studSem1Sub[ID][n][6] - 48;//course weightage
 								studSem1GPA[ID][12] += studSem1GPA[ID][n + 6];
 								printf("Enter grade obtained:");
 								scanf("%3s", grade);//reads 3 chars instead of 2 to prevent long strings that starts with a valid grade from passing checks, applies to all instances of this line with equal syntax 
@@ -403,7 +405,7 @@ void adminMenu() {
 									scanf("%8s", studSem2Sub[ID][n]);//reads until 8 chars only
 									rewind(stdin);
 								}
-								studSem2GPA[ID][n + 6] = (float)studSem2Sub[ID][n][6] - 48;//course weightage
+								studSem2GPA[ID][n + 6] = (int)studSem2Sub[ID][n][6] - 48;//course weightage
 								studSem2GPA[ID][12] += studSem2GPA[ID][n + 6];//total credit hours
 								printf("Enter grade obtained:");
 								scanf("%3s", grade);
@@ -473,7 +475,7 @@ void adminMenu() {
 									scanf("%8s", studSem3Sub[ID][n]);//reads until 8 chars only
 									rewind(stdin);
 								}
-								studSem3GPA[ID][n + 6] = (float)studSem3Sub[ID][n][6] - 48;//course weightage
+								studSem3GPA[ID][n + 6] = (int)studSem3Sub[ID][n][6] - 48;//course weightage
 								studSem3GPA[ID][12] += studSem3GPA[ID][n + 6];
 								printf("Enter grade obtained:");
 								scanf("%3s", grade);
@@ -527,7 +529,7 @@ void adminMenu() {
 					case 2://enter student session
 						month = 0, year = 0;//reset value
 						sessionSelect = 0;
-						printf("Enter edited semester (1,2 or 3):\n%f\n",studSem1GPA[ID][14]);
+						printf("Enter edited semester (1,2 or 3):");
 						scanf("%f", &sessionSelect);
 						rewind(stdin);
 						while (sessionSelect != 1 && sessionSelect!=2 && sessionSelect!=3) {//if it is not an accepted value
@@ -535,6 +537,7 @@ void adminMenu() {
 							printf("Enter 1,2 or 3 only!\n");
 							scanf("%f", &sessionSelect);
 						}//check user input validity
+						system("cls");
 						if (sessionSelect == 1) {
 							printf("Enter starting month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
 							scanf("%f",&month);//again, prevent floating point input being accepeted by compiler
@@ -648,7 +651,7 @@ void adminMenu() {
 							}
 							itoa((int)year, studSem1Sub[ID][9], 10);
 							month = 0, year = 0;//reset value
-							printf("\n\nSemester 1 session date added successfully!\n\n%f",studSem1GPA[ID][14]);
+							printf("\n\nSemester 1 session date added successfully!\n\n");
 							strcpy(studentDetails[ID][5], "Y");
 						}
 						else if (sessionSelect == 2) {//2nd semester, same structure as 1st
@@ -707,7 +710,7 @@ void adminMenu() {
 								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa((int)year, studSem1Sub[ID][9], 10);
+							itoa((int)year, studSem2Sub[ID][7], 10);
 							month = 0, year = 0;//reset value
 							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
 							scanf("%f", &month);
@@ -764,7 +767,7 @@ void adminMenu() {
 								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa((int)year, studSem1Sub[ID][9], 10);
+							itoa((int)year, studSem2Sub[ID][9], 10);
 							month = 0, year = 0;//reset value
 							printf("\n\nSemester 2 session date added successfully!\n\n");
 							strcpy(studentDetails[ID][6], "Y");
@@ -824,7 +827,7 @@ void adminMenu() {
 								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa((int)year, studSem1Sub[ID][9], 10);
+							itoa((int)year, studSem3Sub[ID][7], 10);
 							month=0, year = 0;//reset value
 							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");
 							scanf("%f", &month);
@@ -880,15 +883,17 @@ void adminMenu() {
 								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa((int)year, studSem1Sub[ID][9], 10);
+							itoa((int)year, studSem3Sub[ID][9], 10);
 							month = 0, year = 0;//reset value
 							printf("\n\nSemester 3 session date added successfully!\n\n");
 							strcpy(studentDetails[ID][7], "Y");
 						}
 					}
-					printf("Would you like to continue to edit this student's details? Type 1 to continue, any other value to exit and return to admin menu.");
-					if (scanf("%f", &loop3) == 0)loop3 = 0;
-					rewind(stdin);
+					if (loop3 == 1) {
+						printf("Would you like to continue to edit this student's details? Type 1 to continue, any other value to exit and return to admin menu.");
+						if (scanf("%f", &loop3) == 0)loop3 = 0;
+						rewind(stdin);
+					}
 				}
 			break;
 		case 3://prints student menu
@@ -902,23 +907,23 @@ int calcCGPA(sem,sub,ID) {//features multiple parameters, 1st is semester, 2nd i
 	float cred=0,wgpa=0;//credit and weighted GPA
 	switch (sem) {//semester 
 		case 1://1st
-			for (i = 0;i < sub;i++) {
-				cred += studSem1GPA[ID][i+6];
-				wgpa +=(studSem1GPA[ID][i] * studSem1GPA[ID][i + 6]);//credit hours*GPA
-			}
-			studSem1GPA[ID][13] = wgpa / cred;
+			cred = studSem1GPA[ID][12];
+			for (i = 0;i <sub;i++)
+				wgpa +=studSem1GPA[ID][i] * studSem1GPA[ID][i + 6];//credit hours*GPA
+			studSem1GPA[ID][13] =(wgpa / cred);
+			break;
 		case 2://2nd
-			for (i = 0;i < sub;i++) {
-				cred += studSem2GPA[ID][i + 6];
-				wgpa += (studSem2GPA[ID][i] * studSem2GPA[ID][i + 6]);
-			}
+			cred = studSem2GPA[ID][12];
+			for (i = 0;i <sub;i++) 
+				wgpa =wgpa+ (studSem2GPA[ID][i] * studSem2GPA[ID][i + 6]);
 			studSem2GPA[ID][13] = wgpa / cred;
+			break;
 		case 3://3rd
-			for (i = 0;i < sub;i++) {
-				cred += studSem3GPA[ID][i + 6];
-				wgpa += (studSem3GPA[ID][i] * studSem3GPA[ID][i + 6]);
-			}
+			cred = studSem3GPA[ID][12];
+			for (i = 0;i <sub;i++)
+				wgpa =wgpa+ (studSem3GPA[ID][i] * studSem3GPA[ID][i + 6]);
 			studSem3GPA[ID][13] = wgpa / cred;
+			break;
 	}
 	return 0;
 }
