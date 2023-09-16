@@ -122,7 +122,7 @@ void studentMenu() {
 		else printf("No record found!\n----------------------------------------------------------------------------------\n");//prints if no data; semester 2 and 3 share the same program structure
 		if (strcmp(studentDetails[ID][6], "Y") == 0)//semester 2 session
 			printf("Semester 2 start: %s %s\nSemester 2 end: %s %s\n-----------------------------------------\n", studSem2Sub[ID][6], studSem2Sub[ID][7], studSem2Sub[ID][8], studSem2Sub[ID][9]);
-		else printf("Semester 2 start: No record found!\nSemester 2 end: No record found!\n");
+		else printf("Semester 2 start: No record found!\nSemester 2 end: No record found!\n-----------------------------------------\n");
 		printf("Semester 2 subjects taken: ");
 		if (strcmp(studentDetails[ID][3], "Y") == 0) {
 			for (i = 0;i < studSem2GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem2Sub[ID][i], studSem2GPA[ID][i]);
@@ -133,7 +133,7 @@ void studentMenu() {
 		else printf("No record found!\n----------------------------------------------------------------------------------\n");
 		if (strcmp(studentDetails[ID][7], "Y") == 0)//semester 3
 			printf("Semester 3 start: %s %s\nSemester 3 end: %s %s\n-----------------------------------------\n", studSem3Sub[ID][6], studSem3Sub[ID][7], studSem3Sub[ID][8], studSem3Sub[ID][9]);
-		else printf("Semester 3 start: No record found!\nSemester 3 end: No record found!\n");
+		else printf("Semester 3 start: No record found!\nSemester 3 end: No record found!\n-----------------------------------------\n");
 		printf("Semester 3 subjects taken: ");
 		if (strcmp(studentDetails[ID][4], "Y") == 0) {
 			for (i = 0;i < studSem3GPA[ID][14];i++) printf("\n%s GPA:%.2f", studSem3Sub[ID][i], studSem3GPA[ID][i]);
@@ -265,6 +265,7 @@ void adminMenu() {
 			rewind(stdin);
 			break;
 		case 2://enter course details
+			loop2 = 1;
 			while (loop2 == 1) {
 				printf("Enter student ID:");
 				scanf("%9s", IDcheck);
@@ -326,7 +327,7 @@ void adminMenu() {
 								scanf("%8s", studSem1Sub[ID][n]);//reads until 8 chars only
 								rewind(stdin);
 								while ((float)studSem1Sub[ID][n][6]-48<= 0 ||(float)studSem1Sub[ID][n][6]-48>9|| strlen(studSem1Sub[ID][n]) != 7) {//float is used here as the value to be stored is also float
-									printf("Invalid course code!");
+									printf("Invalid course code!\nEnter course code for subject %d:",n+1);
 									scanf("%8s", studSem1Sub[ID][n]);//reads until 8 chars only, length is checked to only pass if it is equal to 7
 									rewind(stdin);
 								}
@@ -378,7 +379,7 @@ void adminMenu() {
 								printf("-------------------------------------------\n");
 							}
 							strcpy(studentDetails[ID][2], "Y");
-							calcCGPA(1,subjectLoop,ID);//calculate CGPA
+							calcCGPA(1,(int)subjectLoop,ID);//calculate CGPA
 							break;
 						case 2://2nd semester, structure same as 1st sem
 							studSem2GPA[ID][12] = 0;//reset credit hours
@@ -396,7 +397,7 @@ void adminMenu() {
 								scanf("%8s", studSem2Sub[ID][n]);//reads until 8 chars only
 								rewind(stdin);
 								while ((float)studSem2Sub[ID][n][6] - 48 < 0 || (float)studSem2Sub[ID][n][6] - 48 > 9||strlen(studSem2Sub[ID][n]) != 7) {//can only pass if ending with char 0~9 and 7 char in length
-									printf("Invalid course code!");
+									printf("Invalid course code!\nEnter course code for subject %d:", n + 1);
 									scanf("%8s", studSem2Sub[ID][n]);//reads until 8 chars only
 									rewind(stdin);
 								}
@@ -447,7 +448,7 @@ void adminMenu() {
 								printf("-------------------------------------------\n");
 							}
 							strcpy(studentDetails[ID][3], "Y");
-							calcCGPA(2, subjectLoop, ID);
+							calcCGPA(2, (int)subjectLoop, ID);
 							break;
 						case 3://3rd semester, refer to 1st semester comments
 							studSem3GPA[ID][12] = 0;//reset credit hours
@@ -465,7 +466,7 @@ void adminMenu() {
 								scanf("%8s", studSem3Sub[ID][n]);//reads until 8 chars only
 								rewind(stdin);
 								while ((float)studSem3Sub[ID][n][6] - 48 < 0 || (float)studSem3Sub[ID][n][6] - 48 > 9||strlen(studSem3Sub[ID][n])!=7) {//pass if 7th char is 0~9 and is 7 chars in length
-									printf("Invalid course code!");
+									printf("Invalid course code!\nEnter course code for subject %d:", n + 1);
 									scanf("%8s", studSem3Sub[ID][n]);//reads until 8 chars only
 									rewind(stdin);
 								}
@@ -517,7 +518,7 @@ void adminMenu() {
 							}
 							printf("Course code and grade obtained entered successfully!\n\n");
 							strcpy(studentDetails[ID][4], "Y");
-							calcCGPA(3, subjectLoop, ID);
+							calcCGPA(3, (int)subjectLoop, ID);
 						}
 						break;
 					case 2://enter student session
