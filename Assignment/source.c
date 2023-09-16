@@ -13,9 +13,9 @@
 #define F 0.0
 
 int pass1,pass2,pass3,accID,attempt;
-char PIN[8], studentDetails[][8][61] = {{"KPKL1234","idk","Y","Y","Y","Y","Y","Y"},{""}}/*ID, name,subject entry (3 semesters), session entry (3 semesters)*/, studSem1Sub[][10][15] = {{"AAA1003","AAA1014","AAA1013","AAA1024","AAA1024","AAA1052","July","2023","October","2023"}}, studSem2Sub[][10][15] = {{"AAA1103","AAA1114","AAA1113","","","","November","2023","January","2024"}}, studSem3Sub[][10][15] = {{"AAA1203","AAA1214","AAA1213","AAA1224","AAA1224","AAA1252","February","2024","June","2024"}};//course codes(0-5), sem start(6/7), sem end(8/9)
+char PIN[8], studentDetails[][9][99] = {{"KPKL1234","idk","Y","Y","Y","Y","Y","Y"},{""}}/*ID, name,subject entry (3 semesters), session entry (3 semesters)*/, studSem1Sub[][11][99] = {{"AAA1003","AAA1014","AAA1013","AAA1024","AAA1024","AAA1052","July","2023","October","2023"}}, studSem2Sub[][11][99] = {{"AAA1103","AAA1114","AAA1113","","","","November","2023","January","2024"}}, studSem3Sub[][11][99] = {{"AAA1203","AAA1214","AAA1213","AAA1224","AAA1224","AAA1252","February","2024","June","2024"}};//course codes(0-5), sem start(6/7), sem end(8/9)
 char* PINcheck[] = {"234567","123456","234565"};
-float studSem1GPA[][15]={{4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6}}, studSem2GPA[][15] = { {4.0,4.0,4.0,0,0,0,3,4,3,0,0,0,10,4.0,3} }, studSem3GPA[][15] = { {4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6} }, loginSelect = 0, menuSelect = 0;//gpa for respective course(0-5),sem credit hours(6-11),total credit hours(12),cgpa(13),number of subjects(14)
+float studSem1GPA[][16]={{4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6}}, studSem2GPA[][16] = { {4.0,4.0,4.0,0,0,0,3,4,3,0,0,0,10,4.0,3} }, studSem3GPA[][16] = { {4.0,4.0,4.0,4.0,4.0,4.0,3,4,3,4,4,2,20,4.0,6} }, loginSelect = 0, menuSelect = 0;//gpa for respective course(0-5),sem credit hours(6-11),total credit hours(12),cgpa(13),number of subjects(14)
 void menu() {
 	int i;//counter (applies for all instances of i and n)
 	for (i = 1;i <= 148;i++) {
@@ -273,6 +273,7 @@ void adminMenu() {
 				for (ID = 0; ID < sizeof(studentDetails) / sizeof(studentDetails[0]);ID++) {
 					if (strcmp(studentDetails[ID][0], IDcheck) == 0) {
 						loop2 = 0;
+						loop3 = 1;
 						break;
 					}
 				}//verify ID
@@ -391,6 +392,7 @@ void adminMenu() {
 								printf("Enter a number between 1 to 6!");
 								scanf("%f", &subjectLoop);
 							}
+							rewind(stdin);
 							studSem2GPA[ID][14] = subjectLoop;
 							for (n = 0;n < subjectLoop;n++) {
 								printf("Enter course code for subject %d: ", n + 1);
@@ -460,6 +462,7 @@ void adminMenu() {
 								printf("Enter a number between 1 to 6!");
 								scanf("%f", &subjectLoop);
 							}
+							rewind(stdin);
 							studSem3GPA[ID][14] = subjectLoop;
 							for (int n = 0;n < subjectLoop;n++) {
 								printf("Enter course code for subject %d: ", n + 1);
@@ -524,7 +527,7 @@ void adminMenu() {
 					case 2://enter student session
 						month = 0, year = 0;//reset value
 						sessionSelect = 0;
-						printf("Enter edited semester (1,2 or 3):");
+						printf("Enter edited semester (1,2 or 3):\n%f\n",studSem1GPA[ID][14]);
 						scanf("%f", &sessionSelect);
 						rewind(stdin);
 						while (sessionSelect != 1 && sessionSelect!=2 && sessionSelect!=3) {//if it is not an accepted value
@@ -587,7 +590,7 @@ void adminMenu() {
 								scanf("%f", &year);
 								rewind(stdin);
 							}
-							itoa((int)year, studSem1Sub[ID][7],10);//converts integer (year) to a string to be stored in a string array (int) is used here as year is initially a float, itoa means integer to argument, 3rd parameter is number base
+							itoa((int)year, studSem1Sub[ID][7],10);//converts integer (year) to a string to be stored in a string array (int) is used here as year is initially a float, itoa means integer to ASCII, 3rd parameter is number base
 							month = 0, year = 0;//reset value
 							printf("Enter ending month of semester:\n1.January\n2.February\n3.March\n4.April\n5.May\n6.June\n7.July\n8.August\n9.September\n10.October\n11.November\n12.December\n");//ending and starting month and year entry has same structure as starting
 							scanf("%f", &month);
@@ -645,7 +648,7 @@ void adminMenu() {
 							}
 							itoa((int)year, studSem1Sub[ID][9], 10);
 							month = 0, year = 0;//reset value
-							printf("\n\nSemester 1 session date added successfully!\n\n");
+							printf("\n\nSemester 1 session date added successfully!\n\n%f",studSem1GPA[ID][14]);
 							strcpy(studentDetails[ID][5], "Y");
 						}
 						else if (sessionSelect == 2) {//2nd semester, same structure as 1st
@@ -901,19 +904,19 @@ int calcCGPA(sem,sub,ID) {//features multiple parameters, 1st is semester, 2nd i
 		case 1://1st
 			for (i = 0;i < sub;i++) {
 				cred += studSem1GPA[ID][i+6];
-				wgpa += studSem1GPA[ID][i] * studSem1GPA[ID][i + 6];//credit hours*GPA
+				wgpa +=(studSem1GPA[ID][i] * studSem1GPA[ID][i + 6]);//credit hours*GPA
 			}
 			studSem1GPA[ID][13] = wgpa / cred;
 		case 2://2nd
 			for (i = 0;i < sub;i++) {
 				cred += studSem2GPA[ID][i + 6];
-				wgpa += studSem2GPA[ID][i] * studSem2GPA[ID][i + 6];
+				wgpa += (studSem2GPA[ID][i] * studSem2GPA[ID][i + 6]);
 			}
 			studSem2GPA[ID][13] = wgpa / cred;
 		case 3://3rd
 			for (i = 0;i < sub;i++) {
 				cred += studSem3GPA[ID][i + 6];
-				wgpa += studSem3GPA[ID][i] * studSem3GPA[ID][i + 6];
+				wgpa += (studSem3GPA[ID][i] * studSem3GPA[ID][i + 6]);
 			}
 			studSem3GPA[ID][13] = wgpa / cred;
 	}
