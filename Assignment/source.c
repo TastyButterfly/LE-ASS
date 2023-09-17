@@ -155,7 +155,7 @@ void adminMenu() {
 	//above is to print admin menu, clears console
 	int i,n, loop2 = 1, ID,check, gradeLoop = 1,pass1,pass2;//i is for menu counter, n is for function counter
 	char IDcheck[10], grade[4],IDConfirm[10],nameConfirm[62];
-	float totalcgpa=0,wcgpa=0,totalcred=0,select,menu2select=0,subjectLoop = 0, semSelect = 0,sessionSelect = 0, month = 0, year = 0,loop=1,loop3=1;
+	float select,menu2select=0,subjectLoop = 0, semSelect = 0,sessionSelect = 0, month = 0, year = 0,loop=1,loop3=1;
 	while (loop == 1) {
 		system("cls");
 		for (i = 0; i < 50; i++) {
