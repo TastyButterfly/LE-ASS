@@ -334,7 +334,7 @@ void adminMenu() {
 									scanf("%8s", studSem1Sub[ID][n]);//reads until 8 chars only, length is checked to only pass if it is equal to 7
 									rewind(stdin);
 								}
-								studSem1GPA[ID][n + 6] = studSem1Sub[ID][n][6] - '0';//course weightage
+								studSem1GPA[ID][n + 6] = (float)studSem1Sub[ID][n][6] - 48;//course weightage
 								studSem1GPA[ID][12] += studSem1GPA[ID][n + 6];
 								printf("Enter grade obtained:");
 								scanf("%3s", grade);//reads 3 chars instead of 2 to prevent long strings that starts with a valid grade from passing checks, applies to all instances of this line with equal syntax 
@@ -405,7 +405,7 @@ void adminMenu() {
 									scanf("%8s", studSem2Sub[ID][n]);//reads until 8 chars only
 									rewind(stdin);
 								}
-								studSem2GPA[ID][n + 6] = (int)studSem2Sub[ID][n][6] - 48;//course weightage
+								studSem2GPA[ID][n + 6] = (float)studSem2Sub[ID][n][6] - 48;//course weightage
 								studSem2GPA[ID][12] += studSem2GPA[ID][n + 6];//total credit hours
 								printf("Enter grade obtained:");
 								scanf("%3s", grade);
@@ -475,7 +475,7 @@ void adminMenu() {
 									scanf("%8s", studSem3Sub[ID][n]);//reads until 8 chars only
 									rewind(stdin);
 								}
-								studSem3GPA[ID][n + 6] = (int)studSem3Sub[ID][n][6] - 48;//course weightage
+								studSem3GPA[ID][n + 6] = (float)studSem3Sub[ID][n][6] - 48;//course weightage
 								studSem3GPA[ID][12] += studSem3GPA[ID][n + 6];
 								printf("Enter grade obtained:");
 								scanf("%3s", grade);
